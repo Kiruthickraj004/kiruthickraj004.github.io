@@ -219,6 +219,33 @@ h6 {
   z-index: 998;
 }
 
+/* Contact cards (homepage) */
+.contact-cards .card {
+  border: 1px solid #000000; /* black border as requested */
+  border-radius: 8px;
+  background: var(--surface-color);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.contact-cards .card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+.contact-cards .contact-icon {
+  color: var(--accent-color);
+}
+.contact-cards .card-title {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.contact-cards .card-text a {
+  color: var(--default-color);
+  word-break: break-word;
+}
+
+@media (max-width: 576px) {
+  .contact-cards .card-body { padding: 1rem; }
+}
+
 .navmenu a,
 .navmenu a:focus {
   color: var(--nav-dropdown-color);
