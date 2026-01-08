@@ -1,11 +1,28 @@
-
 const output = document.getElementById("terminal-output");
 const username = "Kiruthickraj004";
-const refreshInterval = 5 * 60 * 1000;
+const refreshInterval = 10 * 60 * 1000;
+const GITHUB_TOKEN = window.GITHUB_TOKEN || "";
+
+async function githubFetch(url) {
+  const res = await fetch(url, {
+    headers: {
+      "Authorization": `Bearer ${GITHUB_TOKEN}`,
+      "Accept": "application/vnd.github+json"
+    }
+  });
+
+  if (!res.ok) {
+    const msg = await res.text();
+    throw new Error(`GitHub API Error: ${msg}`);
+  }
+
+  return res.json();
+}
 
 async function getGithubData() {
-  const reposRes = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
-  const repos = await reposRes.json();
+  const repos = await githubFetch(
+    `https://api.github.com/users/${username}/repos?per_page=100`
+  );
 
   const now = new Date();
   const TWO_WEEKS = 1000 * 60 * 60 * 24 * 14;
@@ -16,8 +33,9 @@ async function getGithubData() {
   const repoStats = [];
 
   for (let repo of repos.slice(0, 8)) {
-    const commitsRes = await fetch(repo.commits_url.replace("{/sha}", ""));
-    const commits = await commitsRes.json();
+    const commits = await githubFetch(
+      repo.commits_url.replace("{/sha}", "")
+    );
 
     let recentCommits = 0;
 
@@ -54,20 +72,18 @@ async function getGithubData() {
   )[0];
 
   return {
-    recentlyUpdated: recentlyUpdated?.name,
-    mostActive: mostActive?.name,
-    topRepo: topRepo?.name,
-    flagship: flagship?.name
+    recentlyUpdated: recentlyUpdated?.name || "N/A",
+    mostActive: mostActive?.name || "N/A",
+    topRepo: topRepo?.name || "N/A",
+    flagship: flagship?.name || "N/A"
   };
 }
-
-
 
 async function typeText(text) {
   output.textContent = "";
   for (let i = 0; i < text.length; i++) {
     output.textContent += text.charAt(i);
-    await new Promise(r => setTimeout(r, 20));
+    await new Promise(r => setTimeout(r, 18));
   }
 }
 
@@ -78,20 +94,20 @@ async function renderTerminal() {
     const terminalText = `
 kiruthickraj@portfolio:~$ github profile
 
-Recently Updated: ${data.recentlyUpdated}
-Most Active Repo: ${data.mostActive}
-Top Repo (Stars): ${data.topRepo}
+Recently Updated : ${data.recentlyUpdated}
+Most Active Repo : ${data.mostActive}
+Top Repo (Stars) : ${data.topRepo}
 Flagship Project: ${data.flagship}
+
 kiruthickraj@portfolio:~$ _
 `;
 
-
     await typeText(terminalText);
   } catch (e) {
-    output.textContent = "Failed to fetch GitHub data.";
+    console.error(e);
+    output.textContent = "GitHub API limit or network error.";
   }
 }
 
 renderTerminal();
 setInterval(renderTerminal, refreshInterval);
-
