@@ -3932,3 +3932,37 @@ img.logo,
     min-height: 220px;
   }
 }
+
+.terminal {
+  background: #020617;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(56,189,248,0.25);
+  font-family: "JetBrains Mono", monospace;
+}
+
+.terminal-header {
+  background: #0f172a;
+  padding: 10px 15px;
+  display: flex;
+  gap: 8px;
+}
+
+.terminal-header .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.red { background: #ef4444; }
+.yellow { background: #facc15; }
+.green { background: #22c55e; }
+
+.terminal-body {
+  padding: 25px;
+  color: #e5e7eb;
+  font-size: 14px;
+  min-height: 260px;
+}
+
+
