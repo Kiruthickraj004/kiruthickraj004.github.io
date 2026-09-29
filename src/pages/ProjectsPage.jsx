@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { projectsData, projectCategories } from '../data/portfolioData';
 import ArchitectureModal from '../components/ArchitectureModal';
-import ApiPlayground from '../components/ApiPlayground';
 import GithubIcon from '../components/GithubIcon';
 
 export default function ProjectsPage() {
@@ -101,20 +100,6 @@ export default function ProjectsPage() {
           </div>
         ))}
       </div>
-
-      {/* Embedded Clean API Playground */}
-      <section className="space-y-4 pt-10 border-t border-zinc-200/80 dark:border-zinc-800/80">
-        <div>
-          <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-            Interactive API Explorer
-          </h2>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
-            Simulate REST queries across profile, skills, and container endpoints.
-          </p>
-        </div>
-
-        <ApiPlayground />
-      </section>
 
       {/* Architecture Modal */}
       <ArchitectureModal
