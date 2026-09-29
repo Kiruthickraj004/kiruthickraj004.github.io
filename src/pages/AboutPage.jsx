@@ -5,25 +5,24 @@ import { personalInfo, skillsData, experienceTimeline } from '../data/portfolioD
 export default function AboutPage({ setActivePage }) {
   const backendSkills = skillsData.filter(s => s.category === 'Backend');
   const dbSkills = skillsData.filter(s => s.category === 'Databases & Cache');
-  const frontendSkills = skillsData.filter(s => s.category === 'Frontend');
-  const devopsSkills = skillsData.filter(s => s.category === 'DevOps & Tooling');
+  const frontendDevOpsSkills = skillsData.filter(s => s.category === 'Frontend' || s.category === 'DevOps & Tooling');
 
   const principles = [
     {
-      title: "API First & Strong Contracts",
-      description: "Defining RESTful routes, status codes, serialization models, and validations before code with Postman specifications."
+      title: "API-First & Strict Contracts",
+      description: "Designing RESTful routes, status codes, and serialization models with Postman before writing backend logic."
     },
     {
-      title: "Optimized Relational Persistence",
-      description: "Normalized schema design, foreign keys, selective B-Tree indexing, and query tuning in PostgreSQL and MySQL."
+      title: "Relational Data Integrity",
+      description: "Normalized schemas, foreign keys, selective B-Tree indexing, and query tuning in PostgreSQL and MySQL."
     },
     {
       title: "Low-Latency In-Memory Caching",
-      description: "Strategic cache-aside caching, session stores, and rate-limiting using Redis to protect the database layer."
+      description: "Strategic cache-aside patterns, session stores, and rate-limiting using Redis to protect database throughput."
     },
     {
-      title: "Isolated & Reproducible Environments",
-      description: "Docker multi-stage builds and Docker Compose stacks ensuring consistent environments from local dev to production."
+      title: "Isolated & Reproducible Stacks",
+      description: "Docker multi-stage builds and Docker Compose workflows ensuring identical environments across stages."
     }
   ];
 
@@ -56,7 +55,7 @@ export default function AboutPage({ setActivePage }) {
         <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
           Engineering Approach
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {principles.map((item, idx) => (
             <div key={idx} className="space-y-1.5 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/30">
               <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
@@ -70,14 +69,14 @@ export default function AboutPage({ setActivePage }) {
         </div>
       </section>
 
-      {/* Comprehensive Skills Matrix */}
+      {/* Redesigned Technical Stack Section */}
       <section className="space-y-8 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
         <div className="space-y-1">
           <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-            Technical Stack
+            Technical Stack & Production Skills
           </h2>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            A comprehensive view of technologies I apply in production.
+            Core technologies and architectures I design, build, and deploy.
           </p>
         </div>
 
@@ -87,21 +86,17 @@ export default function AboutPage({ setActivePage }) {
             <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
               Backend Frameworks & Languages
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {backendSkills.map(skill => (
-                <div key={skill.id} className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/30 space-y-1.5">
+                <div
+                  key={skill.id}
+                  className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/30 space-y-1.5 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+                >
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">{skill.name}</span>
-                    <span className="text-xs font-mono text-zinc-400">{skill.experience}</span>
+                    <span className="text-[11px] font-mono text-zinc-400">{skill.experience}</span>
                   </div>
                   <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">{skill.description}</p>
-                  <div className="flex flex-wrap gap-1 pt-1">
-                    {skill.features.map((f, i) => (
-                      <span key={i} className="text-[11px] text-zinc-500 dark:text-zinc-400 font-mono bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
-                        {f}
-                      </span>
-                    ))}
-                  </div>
                 </div>
               ))}
             </div>
@@ -110,14 +105,17 @@ export default function AboutPage({ setActivePage }) {
           {/* Databases & Caching */}
           <div className="space-y-3">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-              Databases & Caching Layer
+              Databases & In-Memory Layer
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {dbSkills.map(skill => (
-                <div key={skill.id} className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/30 space-y-1.5">
+                <div
+                  key={skill.id}
+                  className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/30 space-y-1.5 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+                >
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">{skill.name}</span>
-                    <span className="text-xs font-mono text-zinc-400">{skill.experience}</span>
+                    <span className="text-[11px] font-mono text-zinc-400">{skill.experience}</span>
                   </div>
                   <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">{skill.description}</p>
                 </div>
@@ -125,32 +123,20 @@ export default function AboutPage({ setActivePage }) {
             </div>
           </div>
 
-          {/* Frontend & DevOps */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-                Frontend Engineering
-              </h3>
-              {frontendSkills.map(skill => (
-                <div key={skill.id} className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/30 space-y-1.5">
+          {/* Frontend & DevOps Tooling */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+              Frontend & DevOps Tooling
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {frontendDevOpsSkills.map(skill => (
+                <div
+                  key={skill.id}
+                  className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/30 space-y-1.5 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+                >
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">{skill.name}</span>
-                    <span className="text-xs font-mono text-zinc-400">{skill.experience}</span>
-                  </div>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">{skill.description}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-                DevOps & API Tooling
-              </h3>
-              {devopsSkills.map(skill => (
-                <div key={skill.id} className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/30 space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">{skill.name}</span>
-                    <span className="text-xs font-mono text-zinc-400">{skill.experience}</span>
+                    <span className="text-[11px] font-mono text-zinc-400">{skill.experience}</span>
                   </div>
                   <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">{skill.description}</p>
                 </div>
@@ -165,21 +151,21 @@ export default function AboutPage({ setActivePage }) {
         <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
           Experience History
         </h2>
-        <div className="space-y-6">
+        <div className="space-y-5">
           {experienceTimeline.map((item, index) => (
-            <div key={index} className="space-y-1.5">
+            <div key={index} className="space-y-1.5 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/30">
               <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                   {item.title} <span className="font-normal text-zinc-500">· {item.company}</span>
                 </h3>
                 <span className="text-xs font-mono text-zinc-400">
                   {item.period}
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
                 {item.description}
               </p>
-              <div className="flex flex-wrap gap-1.5 pt-1 text-xs font-mono text-zinc-500">
+              <div className="flex flex-wrap gap-1 pt-1 text-xs font-mono text-zinc-500">
                 {item.skills.join(' · ')}
               </div>
             </div>
@@ -193,7 +179,7 @@ export default function AboutPage({ setActivePage }) {
           onClick={() => { setActivePage('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
           className="text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:underline inline-flex items-center gap-1"
         >
-          <span>Have an opportunity? Let's talk</span>
+          <span>Have an opportunity? View contact details</span>
           <ArrowUpRight size={14} />
         </button>
       </section>

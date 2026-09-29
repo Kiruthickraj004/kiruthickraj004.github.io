@@ -1,15 +1,27 @@
-import React from 'react';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowRight, ArrowUpRight, Mail, Copy, Check } from 'lucide-react';
 import { personalInfo, skillsData, projectsData } from '../data/portfolioData';
+import GithubIcon from '../components/GithubIcon';
 
 export default function HomePage({ setActivePage }) {
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [activeSkillCategory, setActiveSkillCategory] = useState('All');
   const featuredProjects = projectsData.filter(p => p.featured);
 
-  const skillsByCategory = {
-    "Backend": skillsData.filter(s => s.category === 'Backend'),
-    "Databases & Cache": skillsData.filter(s => s.category === 'Databases & Cache'),
-    "Frontend": skillsData.filter(s => s.category === 'Frontend'),
-    "DevOps & APIs": skillsData.filter(s => s.category === 'DevOps & Tooling'),
+  const categories = ['All', 'Backend', 'Databases & Cache', 'Frontend & DevOps'];
+
+  const getFilteredSkills = () => {
+    if (activeSkillCategory === 'All') return skillsData;
+    if (activeSkillCategory === 'Frontend & DevOps') {
+      return skillsData.filter(s => s.category === 'Frontend' || s.category === 'DevOps & Tooling');
+    }
+    return skillsData.filter(s => s.category === activeSkillCategory);
+  };
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(personalInfo.email);
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2000);
   };
 
   return (
@@ -59,33 +71,67 @@ export default function HomePage({ setActivePage }) {
         </div>
       </section>
 
-      {/* Core Technical Arsenal (Minimal Grid) */}
+      {/* Redesigned Skills & Technologies Section */}
       <section className="space-y-6 pt-4 border-t border-zinc-200/80 dark:border-zinc-800/80">
-        <div className="flex items-baseline justify-between">
-          <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-            Skills & Technologies
-          </h2>
-          <button
-            onClick={() => { setActivePage('about'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
-          >
-            Detailed Breakdown &rarr;
-          </button>
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3">
+          <div>
+            <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+              Skills & Technologies
+            </h2>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+              Production tools and frameworks across the full stack.
+            </p>
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 self-start sm:self-auto">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveSkillCategory(cat)}
+                className={`text-xs px-2.5 py-1 rounded-md transition-colors ${
+                  activeSkillCategory === cat
+                    ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-medium shadow-xs'
+                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {Object.entries(skillsByCategory).map(([category, items]) => (
-            <div key={category} className="space-y-2.5">
-              <h3 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
-                {category}
-              </h3>
-              <ul className="space-y-1.5 text-sm text-zinc-600 dark:text-zinc-400">
-                {items.map(item => (
-                  <li key={item.id} className="flex items-center justify-between">
-                    <span>{item.name}</span>
-                  </li>
+        {/* Clean, Curated Tech Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          {getFilteredSkills().map((skill) => (
+            <div
+              key={skill.id}
+              className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/30 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors space-y-2 flex flex-col justify-between"
+            >
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
+                    {skill.name}
+                  </h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400">
+                    {skill.category}
+                  </span>
+                </div>
+                <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                  {skill.tagline}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-1 pt-1 border-t border-zinc-100 dark:border-zinc-800/60">
+                {skill.features.slice(0, 2).map((feat, idx) => (
+                  <span
+                    key={idx}
+                    className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400"
+                  >
+                    · {feat}
+                  </span>
                 ))}
-              </ul>
+              </div>
             </div>
           ))}
         </div>
@@ -105,11 +151,11 @@ export default function HomePage({ setActivePage }) {
           </button>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {featuredProjects.map((project) => (
             <div
               key={project.id}
-              className="p-5 sm:p-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors space-y-3"
+              className="p-5 sm:p-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/30 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors space-y-3"
             >
               <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
                 <h3 className="text-base sm:text-lg font-semibold text-zinc-900 dark:text-zinc-100">
@@ -158,28 +204,63 @@ export default function HomePage({ setActivePage }) {
         </div>
       </section>
 
-      {/* Minimal Contact Callout */}
+      {/* Clean Contact Details Section (No Form) */}
       <section className="pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80 space-y-4">
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-          Get in touch
-        </h2>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed">
-          I am always open to discussing engineering roles, architecture consulting, or full-stack web applications.
-        </p>
-        <div className="flex items-center gap-4 text-sm font-medium">
+        <div>
+          <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+            Contact
+          </h2>
+          <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mt-1">
+            Let's connect.
+          </h3>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed mt-1">
+            Open for full-time engineering roles, backend microservice contracts, and technical consulting.
+          </p>
+        </div>
+
+        {/* Clean Contact Strip */}
+        <div className="p-4 sm:p-5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+            <div className="flex items-center gap-2">
+              <Mail size={16} className="text-zinc-400" />
+              <a
+                href={`mailto:${personalInfo.email}`}
+                className="font-medium text-zinc-900 dark:text-zinc-100 hover:underline"
+              >
+                {personalInfo.email}
+              </a>
+              <button
+                onClick={handleCopyEmail}
+                className="p-1 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
+                title="Copy email address"
+              >
+                {copiedEmail ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <GithubIcon size={16} className="text-zinc-400" />
+              <a
+                href={personalInfo.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors inline-flex items-center gap-1"
+              >
+                <span>github.com/{personalInfo.username}</span>
+                <ArrowUpRight size={12} />
+              </a>
+            </div>
+          </div>
+
           <a
-            href={`mailto:${personalInfo.email}`}
-            className="text-zinc-900 dark:text-zinc-100 hover:underline"
+            href="./Kiruthickraj_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900 text-xs font-medium hover:opacity-90 transition-opacity self-start sm:self-auto"
           >
-            {personalInfo.email}
+            <span>Resume (PDF)</span>
+            <ArrowUpRight size={12} />
           </a>
-          <span className="text-zinc-300 dark:text-zinc-700">·</span>
-          <button
-            onClick={() => { setActivePage('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
-          >
-            Contact Form &rarr;
-          </button>
         </div>
       </section>
 
