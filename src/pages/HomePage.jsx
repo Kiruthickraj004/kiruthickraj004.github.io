@@ -1,14 +1,30 @@
-import React, { useState } from 'react';
-import { ArrowRight, ArrowUpRight, Mail, Copy, Check, Server, Database, Globe, Container, Activity } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowDown, ArrowUpRight, Mail, Copy, Check, Clock, Server, Database, Globe } from 'lucide-react';
 import { personalInfo, projectsData } from '../data/portfolioData';
 import GithubIcon from '../components/GithubIcon';
 
 export default function HomePage({ setActivePage }) {
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [activePipelineNode, setActivePipelineNode] = useState('gateway');
-  const [activeFocus, setActiveFocus] = useState('fullstack');
+  const [activeStackTab, setActiveStackTab] = useState(0);
+  const [localTime, setLocalTime] = useState('');
 
   const featuredProjects = projectsData.filter(p => p.featured);
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+      setLocalTime(timeStr);
+    };
+    updateClock();
+    const interval = setInterval(updateClock, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(personalInfo.email);
@@ -16,261 +32,213 @@ export default function HomePage({ setActivePage }) {
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  const pipelineNodes = [
+  // Traditional categorized skills (clean names only as requested)
+  const traditionalSkills = [
     {
-      id: 'client',
-      title: 'Client Layer',
-      tech: 'ReactJS',
-      spec: 'Reactive SPA, Context state & responsive Tailwind interfaces',
-      metric: 'Render: < 16ms'
+      category: "Backend Development",
+      skills: ["Python", "Django", "Django REST Framework", "PHP", "Laravel"]
     },
     {
-      id: 'gateway',
-      title: 'API & Microservices',
-      tech: 'Python / Django / Laravel',
-      spec: 'RESTful endpoints, JWT authentication & ModelSerializers',
-      metric: 'Throughput: High Concurrency'
+      category: "Databases & Caching",
+      skills: ["PostgreSQL", "MySQL", "Redis"]
     },
     {
-      id: 'cache',
-      title: 'Acceleration Layer',
-      tech: 'Redis',
-      spec: 'In-memory cache-aside, token bucket rate limiting & queues',
-      metric: 'Latency: ~14ms'
+      category: "Frontend Engineering",
+      skills: ["ReactJS", "JavaScript (ES6+)", "Tailwind CSS"]
     },
     {
-      id: 'storage',
-      title: 'Persistence Layer',
-      tech: 'PostgreSQL / MySQL',
-      spec: 'ACID relational schemas, B-Tree indexes & automated migrations',
-      metric: 'Integrity: ACID Guaranteed'
+      category: "DevOps & API Tooling",
+      skills: ["Docker", "Docker Compose", "Postman", "Git"]
     }
   ];
 
-  const focusDescriptions = {
-    fullstack: "Architecting end-to-end web applications with robust Python/PHP backends, reactive React interfaces, and low-latency Redis caching.",
-    backend: "Specializing in Django REST Framework and Laravel, clean serialization, JWT token rotation, and resilient API contracts.",
-    data: "Designing normalized relational schemas in PostgreSQL & MySQL with sub-20ms in-memory cache-aside layers using Redis.",
-    devops: "Containerizing services with multi-stage Docker builds, Docker Compose networks, and rigorous Postman test collections."
-  };
-
-  const skillMatrix = [
+  // Impressive starter architectural tiers for the hero
+  const heroTiers = [
     {
-      domain: "01 // BACKEND & APIS",
-      skills: [
-        { num: "01", name: "Python" },
-        { num: "02", name: "Django" },
-        { num: "03", name: "Django REST Framework" },
-        { num: "04", name: "PHP" },
-        { num: "05", name: "Laravel" },
-      ]
+      label: "API & Backend Core",
+      highlight: "High-Throughput Services",
+      techSummary: "Python (Django/DRF) & PHP (Laravel)",
+      description: "Building production RESTful APIs, JWT bearer auth rotation, automated serializers, and service repository architectures."
     },
     {
-      domain: "02 // DATA & ACCELERATION",
-      skills: [
-        { num: "06", name: "PostgreSQL" },
-        { num: "07", name: "MySQL" },
-        { num: "08", name: "Redis" },
-      ]
+      label: "In-Memory & Storage",
+      highlight: "Sub-20ms Low-Latency Reads",
+      techSummary: "Redis Caching + PostgreSQL & MySQL",
+      description: "Implementing key-value cache-aside patterns, rate limiting, and relational schemas with B-Tree indexes and ACID compliance."
     },
     {
-      domain: "03 // CLIENT & INFRASTRUCTURE",
-      skills: [
-        { num: "09", name: "ReactJS" },
-        { num: "10", name: "Docker" },
-        { num: "11", name: "Postman" },
-      ]
+      label: "Reactive UI & Containers",
+      highlight: "Turnkey Multi-Service Delivery",
+      techSummary: "ReactJS + Docker & Postman",
+      description: "Engineering responsive Single-Page Applications backed by multi-stage Docker builds and automated Postman contract test suites."
     }
   ];
-
-  const currentNode = pipelineNodes.find(n => n.id === activePipelineNode) || pipelineNodes[1];
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-14 space-y-16 sm:space-y-20">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-20 pb-20">
       
-      {/* 1. TOTALLY NEW MINIMALIST HERO WITH ARCHITECTURAL PIPELINE ANIMATION */}
-      <section className="space-y-8">
+      {/* ========================================================= */}
+      {/* 1. STANDALONE IMPRESSIVE STARTER HERO (NEW IDEA & LAYOUT) */}
+      {/* ========================================================= */}
+      <section className="min-h-[78vh] flex flex-col justify-between pt-6 sm:pt-10 pb-4 border-b border-zinc-200/80 dark:border-zinc-800/80">
         
-        {/* Top Meta Line: Availability & Role */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 text-xs font-mono text-zinc-600 dark:text-zinc-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse-subtle" />
-            <span>{personalInfo.status}</span>
+        {/* Top Spec Header Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono border-b border-zinc-100 dark:border-zinc-800/60 pb-3">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-subtle" />
+            <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+              KIRUTHICKRAJ
+            </span>
+            <span className="text-zinc-400 dark:text-zinc-600">/</span>
+            <span className="text-zinc-500 dark:text-zinc-400">
+              FULL-STACK ARCHITECT
+            </span>
           </div>
 
-          <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500">
-            India (IST) · Full-Stack Engineer
-          </span>
+          <div className="flex items-center gap-3 text-zinc-400 dark:text-zinc-500 text-[11px]">
+            <span className="flex items-center gap-1">
+              <Clock size={11} />
+              <span>IST {localTime || '11:15 AM'}</span>
+            </span>
+            <span>·</span>
+            <span>INDIA</span>
+          </div>
         </div>
 
-        {/* Identity & Dynamic Focus Switcher */}
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-              {personalInfo.name}
+        {/* Centerpiece: Grand Statement & Subtext */}
+        <div className="space-y-6 my-auto py-8">
+          <div className="space-y-3">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 leading-[1.12]">
+              Engineering resilient backends & modern web systems.
             </h1>
-            <p className="text-base sm:text-lg text-zinc-500 dark:text-zinc-400 font-normal">
-              Full-Stack Developer & API Systems Architect.
+            <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed font-normal">
+              I architect the servers, databases, and client interfaces that power high-concurrency applications — specialized in <strong className="font-medium text-zinc-900 dark:text-zinc-100">Python (Django/DRF)</strong>, <strong className="font-medium text-zinc-900 dark:text-zinc-100">PHP (Laravel)</strong>, and <strong className="font-medium text-zinc-900 dark:text-zinc-100">ReactJS</strong>, paired with <strong className="font-medium text-zinc-900 dark:text-zinc-100">Redis</strong>, <strong className="font-medium text-zinc-900 dark:text-zinc-100">PostgreSQL</strong>, and <strong className="font-medium text-zinc-900 dark:text-zinc-100">Docker</strong>.
             </p>
           </div>
 
-          {/* Interactive Architectural Focus Switcher (New Idea) */}
-          <div className="space-y-2.5 pt-1">
-            <div className="flex flex-wrap gap-1.5">
-              {[
-                { id: 'fullstack', label: 'Full-Stack' },
-                { id: 'backend', label: 'Backend & APIs' },
-                { id: 'data', label: 'Data & Redis' },
-                { id: 'devops', label: 'Docker & DevOps' },
-              ].map(f => (
-                <button
-                  key={f.id}
-                  onClick={() => setActiveFocus(f.id)}
-                  className={`text-xs px-3 py-1 rounded-full transition-all ${
-                    activeFocus === f.id
-                      ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 font-medium'
-                      : 'border border-zinc-200 dark:border-zinc-800/80 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/40'
-                  }`}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
-
-            <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-xl min-h-[44px]">
-              {focusDescriptions[activeFocus]}
-            </p>
-          </div>
-        </div>
-
-        {/* NEW IDEA: The Minimalist Live Pipeline Animation Card */}
-        <div className="p-5 sm:p-6 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/30 space-y-4 shadow-xs">
-          
-          <div className="flex items-center justify-between text-xs font-mono">
-            <span className="text-zinc-400 dark:text-zinc-500 uppercase tracking-widest flex items-center gap-1.5">
-              <Activity size={12} className="text-emerald-500" />
-              <span>Full-Stack Request Lifecycle</span>
-            </span>
-            <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
-              Interactive · Click a node
-            </span>
-          </div>
-
-          {/* Connected Pipeline Flow */}
-          <div className="relative pt-2 pb-1">
-            {/* Animated Packet Track */}
-            <div className="absolute top-1/2 left-4 right-4 -translate-y-1/2 h-[2px] bg-zinc-200 dark:bg-zinc-800 overflow-hidden pointer-events-none -z-0">
-              <div className="w-16 h-full bg-zinc-800 dark:bg-zinc-300 animate-packet" />
-            </div>
-
-            {/* Pipeline Nodes */}
-            <div className="relative z-10 grid grid-cols-4 gap-2">
-              {pipelineNodes.map((node) => {
-                const isActive = activePipelineNode === node.id;
-                return (
+          {/* NEW IDEA: Interactive Architectural Showcase Strip */}
+          <div className="p-4 sm:p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-900/40 space-y-3.5 shadow-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-100 dark:border-zinc-800/60 pb-2.5">
+              <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-widest">
+                System Pillars
+              </span>
+              <div className="flex items-center gap-1">
+                {heroTiers.map((tier, idx) => (
                   <button
-                    key={node.id}
-                    onClick={() => setActivePipelineNode(node.id)}
-                    className={`p-2.5 rounded-xl border text-center transition-all ${
-                      isActive
-                        ? 'border-zinc-900 dark:border-zinc-100 bg-white dark:bg-zinc-800 shadow-xs'
-                        : 'border-zinc-200/80 dark:border-zinc-800/80 bg-white/90 dark:bg-zinc-900/90 hover:border-zinc-400 dark:hover:border-zinc-600'
+                    key={idx}
+                    onClick={() => setActiveStackTab(idx)}
+                    className={`text-xs px-2.5 py-1 rounded-full transition-all ${
+                      activeStackTab === idx
+                        ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 font-medium'
+                        : 'text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'
                     }`}
                   >
-                    <div className="text-[10px] font-mono text-zinc-400 uppercase tracking-tight truncate">
-                      {node.title.split(' ')[0]}
-                    </div>
-                    <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 truncate mt-0.5">
-                      {node.tech.split(' ')[0]}
-                    </div>
+                    0{idx + 1}
                   </button>
-                );
-              })}
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Node Spec Telemetry Bar */}
-          <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200/60 dark:border-zinc-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-            <div>
-              <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                {currentNode.title}: {currentNode.tech}
-              </span>
-              <p className="text-zinc-500 dark:text-zinc-400 text-[11px] mt-0.5">
-                {currentNode.spec}
+            <div className="space-y-1">
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                  {heroTiers[activeStackTab].label}
+                </h3>
+                <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400">
+                  {heroTiers[activeStackTab].highlight}
+                </span>
+              </div>
+              <div className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
+                {heroTiers[activeStackTab].techSummary}
+              </div>
+              <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed pt-1">
+                {heroTiers[activeStackTab].description}
               </p>
             </div>
-            <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-zinc-200/70 dark:bg-zinc-700/60 text-zinc-700 dark:text-zinc-300 self-start sm:self-auto shrink-0">
-              {currentNode.metric}
-            </span>
           </div>
 
+          {/* Quick Actions */}
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <a
+              href="#selected-projects"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 text-xs font-medium hover:opacity-90 transition-opacity"
+            >
+              <span>Explore Projects</span>
+              <ArrowDown size={13} />
+            </a>
+
+            <a
+              href="./Kiruthickraj_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors"
+            >
+              <span>Download Resume (PDF)</span>
+              <ArrowUpRight size={13} />
+            </a>
+
+            <div className="flex items-center gap-1.5 pl-2 text-xs">
+              <a
+                href={`mailto:${personalInfo.email}`}
+                className="font-mono text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+              >
+                {personalInfo.email}
+              </a>
+              <button
+                onClick={handleCopyEmail}
+                className="p-1 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
+                title="Copy email"
+              >
+                {copiedEmail ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Quick Link Navigation */}
-        <div className="flex flex-wrap items-center gap-2 text-xs font-medium pt-1">
-          <button
-            onClick={() => { setActivePage('projects'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="px-3.5 py-1.5 rounded-full bg-zinc-900 text-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 hover:opacity-90 transition-opacity flex items-center gap-1"
-          >
-            <span>Selected Projects</span>
-            <ArrowRight size={12} />
-          </button>
-
-          <button
-            onClick={() => { setActivePage('about'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="px-3.5 py-1.5 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors"
-          >
-            About & Experience
-          </button>
-
-          <a
-            href="./Kiruthickraj_Resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-3.5 py-1.5 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors inline-flex items-center gap-1"
-          >
-            <span>Resume (PDF)</span>
-            <ArrowUpRight size={12} />
-          </a>
+        {/* Bottom Anchor / Scroll Prompt */}
+        <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 dark:text-zinc-500 pt-3">
+          <span>KIRUTHICKRAJ004.GITHUB.IO</span>
+          <span className="flex items-center gap-1">
+            <span>Scroll down</span>
+            <ArrowDown size={12} />
+          </span>
         </div>
 
       </section>
 
-      {/* 2. COMPLETELY REDESIGNED SKILLS SECTION: SWISS-STYLE PRECISION MATRIX (NAMES ONLY) */}
-      <section className="space-y-4 pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80">
-        <div className="flex items-baseline justify-between">
+      {/* ========================================================= */}
+      {/* 2. TRADITIONAL SKILLS SECTION (FAMILIAR CATEGORIZED CARDS) */}
+      {/* ========================================================= */}
+      <section className="space-y-6">
+        <div>
           <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-            01 // Technical Competencies
+            Skills & Technologies
           </h2>
-          <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500">
-            11 Core Technologies
-          </span>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+            Core programming languages, frameworks, and infrastructure tools.
+          </p>
         </div>
 
-        {/* 3 Architectural Columns with Precision Cell Design */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-          {skillMatrix.map((col) => (
+        {/* Traditional Categorized Card Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {traditionalSkills.map((group) => (
             <div
-              key={col.domain}
-              className="p-4 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/30 space-y-3"
+              key={group.category}
+              className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/30 space-y-3"
             >
-              <h3 className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500 border-b border-zinc-100 dark:border-zinc-800/60 pb-2">
-                {col.domain}
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 border-b border-zinc-100 dark:border-zinc-800/60 pb-2">
+                {group.category}
               </h3>
 
-              <div className="space-y-1.5">
-                {col.skills.map((skill) => (
-                  <div
-                    key={skill.num}
-                    className="p-2.5 rounded-xl border border-zinc-200/60 dark:border-zinc-800/60 bg-white dark:bg-zinc-900/50 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors flex items-center justify-between group"
+              {/* Clean badges with names only */}
+              <div className="flex flex-wrap gap-2">
+                {group.skills.map((skillName) => (
+                  <span
+                    key={skillName}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200/80 dark:border-zinc-700/80 hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors"
                   >
-                    <span className="text-xs font-medium text-zinc-800 dark:text-zinc-200 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
-                      {skill.name}
-                    </span>
-                    <span className="font-mono text-[10px] text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300">
-                      {skill.num}
-                    </span>
-                  </div>
+                    {skillName}
+                  </span>
                 ))}
               </div>
             </div>
@@ -278,12 +246,20 @@ export default function HomePage({ setActivePage }) {
         </div>
       </section>
 
-      {/* 3. SELECTED SYSTEMS / PROJECTS */}
-      <section className="space-y-4 pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80">
+      {/* ========================================================= */}
+      {/* 3. SELECTED PROJECTS                                     */}
+      {/* ========================================================= */}
+      <section id="selected-projects" className="space-y-6 pt-4 border-t border-zinc-200/80 dark:border-zinc-800/80">
         <div className="flex items-baseline justify-between">
-          <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-            02 // Selected Systems
-          </h2>
+          <div>
+            <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+              Selected Work
+            </h2>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+              Production architectures and full-stack systems.
+            </p>
+          </div>
+
           <button
             onClick={() => { setActivePage('projects'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
@@ -292,11 +268,11 @@ export default function HomePage({ setActivePage }) {
           </button>
         </div>
 
-        <div className="space-y-3 pt-1">
+        <div className="space-y-3">
           {featuredProjects.map((project) => (
             <div
               key={project.id}
-              className="p-4 sm:p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/30 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors space-y-2.5"
+              className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/30 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors space-y-2.5"
             >
               <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
                 <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
@@ -346,13 +322,15 @@ export default function HomePage({ setActivePage }) {
         </div>
       </section>
 
-      {/* 4. DIRECT CONTACT COORDINATES (NO FORM) */}
+      {/* ========================================================= */}
+      {/* 4. DIRECT CONTACT DETAILS AT LAST (NO FORM)               */}
+      {/* ========================================================= */}
       <section className="pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80 space-y-4">
         <div>
           <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-            03 // Contact Coordinates
+            Contact
           </h2>
-          <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mt-1">
+          <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mt-1">
             Let's connect.
           </h3>
           <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mt-0.5">
@@ -360,7 +338,7 @@ export default function HomePage({ setActivePage }) {
           </p>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Mail size={15} className="text-zinc-400" />
