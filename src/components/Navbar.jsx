@@ -23,8 +23,8 @@ export default function Navbar({ activePage, setActivePage }) {
 
   return (
     <>
-      {/* Floating Island Navigation (Non-traditional, ultra-clean) */}
-      <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl">
+      {/* Floating Island Navigation (Active on Mobile/Tablet; Desktop uses Split-Screen Left Dock) */}
+      <header className="lg:hidden fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl">
         <div className="backdrop-blur-md bg-white/85 dark:bg-zinc-900/85 border border-zinc-200/80 dark:border-zinc-800/80 rounded-full px-3.5 sm:px-4 py-2 shadow-sm flex items-center justify-between transition-colors">
           
           {/* Monogram / Brand */}

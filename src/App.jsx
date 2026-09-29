@@ -63,9 +63,11 @@ function PortfolioApp() {
         )}
       </main>
 
-      <Footer
-        setActivePage={setActivePage}
-      />
+      {activePage !== 'home' && (
+        <Footer
+          setActivePage={setActivePage}
+        />
+      )}
     </div>
   );
 }
