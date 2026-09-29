@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowDown, ArrowUpRight, Mail, Copy, Check, Clock, Server, Database, Globe } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Mail, Copy, Check, Clock } from 'lucide-react';
 import { personalInfo, projectsData } from '../data/portfolioData';
 import GithubIcon from '../components/GithubIcon';
 
@@ -7,9 +7,27 @@ export default function HomePage({ setActivePage }) {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [activeStackTab, setActiveStackTab] = useState(0);
   const [localTime, setLocalTime] = useState('');
+  const [scrollY, setScrollY] = useState(0);
 
   const featuredProjects = projectsData.filter(p => p.featured);
 
+  // Parallax scroll listener with requestAnimationFrame for 60fps smoothness
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Live India Standard Time Clock
   useEffect(() => {
     const updateClock = () => {
       const now = new Date();
@@ -32,6 +50,13 @@ export default function HomePage({ setActivePage }) {
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
+  const scrollToContent = () => {
+    const contentEl = document.getElementById('full-website-content');
+    if (contentEl) {
+      contentEl.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   // Traditional categorized skills (clean names only as requested)
   const traditionalSkills = [
     {
@@ -52,7 +77,7 @@ export default function HomePage({ setActivePage }) {
     }
   ];
 
-  // Impressive starter architectural tiers for the hero
+  // Architectural pillars for the hero
   const heroTiers = [
     {
       label: "API & Backend Core",
@@ -74,16 +99,26 @@ export default function HomePage({ setActivePage }) {
     }
   ];
 
+  // Optical Parallax Calculations (whisper-quiet, minimal)
+  const heroTranslateY = Math.min(scrollY * 0.35, 220);
+  const heroOpacity = Math.max(0, 1 - scrollY / 620);
+  const heroScale = Math.max(0.94, 1 - scrollY * 0.00025);
+
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-20 pb-20">
+    <div className="relative">
       
-      {/* ========================================================= */}
-      {/* 1. STANDALONE IMPRESSIVE STARTER HERO (NEW IDEA & LAYOUT) */}
-      {/* ========================================================= */}
-      <section className="min-h-[78vh] flex flex-col justify-between pt-6 sm:pt-10 pb-4 border-b border-zinc-200/80 dark:border-zinc-800/80">
-        
-        {/* Top Spec Header Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono border-b border-zinc-100 dark:border-zinc-800/60 pb-3">
+      {/* ========================================================================= */}
+      {/* 1. IMMERSIVE STARTER HERO (PARALLAX LAYER 1 - GENTLY GLIDES IN BACKGROUND) */}
+      {/* ========================================================================= */}
+      <section 
+        className="relative z-10 min-h-[82vh] sm:min-h-[88vh] flex flex-col justify-between max-w-3xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-16 transition-transform duration-75 ease-out will-change-transform"
+        style={{
+          transform: `translateY(${heroTranslateY}px) scale(${heroScale})`,
+          opacity: heroOpacity
+        }}
+      >
+        {/* Top Specification Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono border-b border-zinc-200/80 dark:border-zinc-800/80 pb-3">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-subtle" />
             <span className="font-semibold text-zinc-900 dark:text-zinc-100">
@@ -105,7 +140,7 @@ export default function HomePage({ setActivePage }) {
           </div>
         </div>
 
-        {/* Centerpiece: Grand Statement & Subtext */}
+        {/* Centerpiece: Grand Statement & Interactive System Pillars */}
         <div className="space-y-6 my-auto py-8">
           <div className="space-y-3">
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 leading-[1.12]">
@@ -116,11 +151,11 @@ export default function HomePage({ setActivePage }) {
             </p>
           </div>
 
-          {/* NEW IDEA: Interactive Architectural Showcase Strip */}
-          <div className="p-4 sm:p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-900/40 space-y-3.5 shadow-xs">
+          {/* Interactive Architectural System Showcase Card */}
+          <div className="p-4 sm:p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/85 dark:bg-zinc-900/50 backdrop-blur-sm space-y-3.5 shadow-xs">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-100 dark:border-zinc-800/60 pb-2.5">
               <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-widest">
-                System Pillars
+                Architectural Pillars
               </span>
               <div className="flex items-center gap-1">
                 {heroTiers.map((tier, idx) => (
@@ -157,15 +192,15 @@ export default function HomePage({ setActivePage }) {
             </div>
           </div>
 
-          {/* Quick Actions */}
+          {/* Quick Action Anchors */}
           <div className="flex flex-wrap items-center gap-3 pt-1">
-            <a
-              href="#selected-projects"
+            <button
+              onClick={scrollToContent}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 text-xs font-medium hover:opacity-90 transition-opacity"
             >
-              <span>Explore Projects</span>
+              <span>Explore Full Portfolio</span>
               <ArrowDown size={13} />
-            </a>
+            </button>
 
             <a
               href="./Kiruthickraj_Resume.pdf"
@@ -177,7 +212,7 @@ export default function HomePage({ setActivePage }) {
               <ArrowUpRight size={13} />
             </a>
 
-            <div className="flex items-center gap-1.5 pl-2 text-xs">
+            <div className="flex items-center gap-1.5 pl-1 text-xs">
               <a
                 href={`mailto:${personalInfo.email}`}
                 className="font-mono text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
@@ -195,195 +230,208 @@ export default function HomePage({ setActivePage }) {
           </div>
         </div>
 
-        {/* Bottom Anchor / Scroll Prompt */}
-        <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 dark:text-zinc-500 pt-3">
+        {/* Parallax Downward Scroll Cue */}
+        <div 
+          onClick={scrollToContent}
+          className="flex items-center justify-between text-[11px] font-mono text-zinc-400 dark:text-zinc-500 pt-2 cursor-pointer hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+        >
           <span>KIRUTHICKRAJ004.GITHUB.IO</span>
-          <span className="flex items-center gap-1">
-            <span>Scroll down</span>
-            <ArrowDown size={12} />
+          <span className="flex items-center gap-1.5">
+            <span>Scroll to reveal full site</span>
+            <ArrowDown size={12} className="animate-bounce" />
           </span>
         </div>
-
       </section>
 
-      {/* ========================================================= */}
-      {/* 2. TRADITIONAL SKILLS SECTION (FAMILIAR CATEGORIZED CARDS) */}
-      {/* ========================================================= */}
-      <section className="space-y-6">
-        <div>
-          <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-            Skills & Technologies
-          </h2>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
-            Core programming languages, frameworks, and infrastructure tools.
-          </p>
-        </div>
-
-        {/* Traditional Categorized Card Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {traditionalSkills.map((group) => (
-            <div
-              key={group.category}
-              className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/30 space-y-3"
-            >
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 border-b border-zinc-100 dark:border-zinc-800/60 pb-2">
-                {group.category}
-              </h3>
-
-              {/* Clean badges with names only */}
-              <div className="flex flex-wrap gap-2">
-                {group.skills.map((skillName) => (
-                  <span
-                    key={skillName}
-                    className="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200/80 dark:border-zinc-700/80 hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors"
-                  >
-                    {skillName}
-                  </span>
-                ))}
+      {/* ========================================================================= */}
+      {/* 2. THE FULL WEBSITE (PARALLAX LAYER 2 - SLIDES SMOOTHLY OVER THE HERO)   */}
+      {/* ========================================================================= */}
+      <div 
+        id="full-website-content"
+        className="relative z-20 -mt-8 sm:-mt-12 rounded-t-[32px] sm:rounded-t-[40px] border-t border-zinc-200/90 dark:border-zinc-800/90 bg-[#fafafa] dark:bg-[#09090b] shadow-[0_-20px_40px_-15px_rgba(0,0,0,0.06)] dark:shadow-[0_-20px_40px_-15px_rgba(0,0,0,0.5)] pt-12 sm:pt-16 pb-20 transition-colors"
+      >
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-16 sm:space-y-20">
+          
+          {/* Section A: Traditional Categorized Skills (Names Only) */}
+          <section className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+              <div>
+                <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                  Skills & Technologies
+                </h2>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+                  Core programming languages, frameworks, and infrastructure tools.
+                </p>
               </div>
+              <span className="text-xs font-mono text-zinc-400 hidden sm:inline">
+                Full-Stack Architecture
+              </span>
             </div>
-          ))}
-        </div>
-      </section>
 
-      {/* ========================================================= */}
-      {/* 3. SELECTED PROJECTS                                     */}
-      {/* ========================================================= */}
-      <section id="selected-projects" className="space-y-6 pt-4 border-t border-zinc-200/80 dark:border-zinc-800/80">
-        <div className="flex items-baseline justify-between">
-          <div>
-            <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-              Selected Work
-            </h2>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
-              Production architectures and full-stack systems.
-            </p>
-          </div>
+            {/* Traditional Categorized Card Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {traditionalSkills.map((group) => (
+                <div
+                  key={group.category}
+                  className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/40 space-y-3"
+                >
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 border-b border-zinc-100 dark:border-zinc-800/60 pb-2">
+                    {group.category}
+                  </h3>
 
-          <button
-            onClick={() => { setActivePage('projects'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
-          >
-            All Projects &rarr;
-          </button>
-        </div>
-
-        <div className="space-y-3">
-          {featuredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/30 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors space-y-2.5"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                  {project.title}
-                </h3>
-                <span className="text-xs font-mono text-zinc-400">
-                  {project.category}
-                </span>
-              </div>
-
-              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                {project.tagline}
-              </p>
-
-              <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-                <div className="flex flex-wrap gap-1.5">
-                  {project.tech.map((t) => (
-                    <span
-                      key={t}
-                      className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
-                    >
-                      {t}
-                    </span>
-                  ))}
+                  {/* Clean badges with names only */}
+                  <div className="flex flex-wrap gap-2">
+                    {group.skills.map((skillName) => (
+                      <span
+                        key={skillName}
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200/80 dark:border-zinc-700/80 hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors"
+                      >
+                        {skillName}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-
-                <div className="flex items-center gap-3 text-xs font-medium">
-                  <button
-                    onClick={() => { setActivePage('projects'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className="text-zinc-800 dark:text-zinc-200 hover:underline"
-                  >
-                    View Details
-                  </button>
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
-                    title="Source on GitHub"
-                  >
-                    <ArrowUpRight size={13} />
-                  </a>
-                </div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
+          </section>
 
-      {/* ========================================================= */}
-      {/* 4. DIRECT CONTACT DETAILS AT LAST (NO FORM)               */}
-      {/* ========================================================= */}
-      <section className="pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80 space-y-4">
-        <div>
-          <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-            Contact
-          </h2>
-          <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mt-1">
-            Let's connect.
-          </h3>
-          <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mt-0.5">
-            Available for full-time engineering roles, backend microservice contracts, and technical architecture consulting.
-          </p>
-        </div>
+          {/* Section B: Selected Projects */}
+          <section className="space-y-6 pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80">
+            <div className="flex items-baseline justify-between">
+              <div>
+                <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                  Selected Work
+                </h2>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+                  Production architectures and full-stack systems.
+                </p>
+              </div>
 
-        <div className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Mail size={15} className="text-zinc-400" />
-              <a
-                href={`mailto:${personalInfo.email}`}
-                className="text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:underline"
-              >
-                {personalInfo.email}
-              </a>
               <button
-                onClick={handleCopyEmail}
-                className="p-1 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
-                title="Copy email address"
+                onClick={() => { setActivePage('projects'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
               >
-                {copiedEmail ? <Check size={13} className="text-emerald-500" /> : <Copy size={13} />}
+                All Projects &rarr;
               </button>
             </div>
 
-            <div className="flex items-center gap-2">
-              <GithubIcon size={15} className="text-zinc-400" />
-              <a
-                href={personalInfo.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors inline-flex items-center gap-1"
-              >
-                <span>github.com/{personalInfo.username}</span>
-                <ArrowUpRight size={12} />
-              </a>
-            </div>
-          </div>
+            <div className="space-y-3.5">
+              {featuredProjects.map((project) => (
+                <div
+                  key={project.id}
+                  className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/40 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors space-y-2.5"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                    <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                      {project.title}
+                    </h3>
+                    <span className="text-xs font-mono text-zinc-400">
+                      {project.category}
+                    </span>
+                  </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto">
-            <a
-              href="./Kiruthickraj_Resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900 text-xs font-medium hover:opacity-90 transition-opacity"
-            >
-              <span>Download Resume</span>
-              <ArrowUpRight size={12} />
-            </a>
-          </div>
+                  <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                    {project.tagline}
+                  </p>
+
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.tech.map((t) => (
+                        <span
+                          key={t}
+                          className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-3 text-xs font-medium">
+                      <button
+                        onClick={() => { setActivePage('projects'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                        className="text-zinc-800 dark:text-zinc-200 hover:underline"
+                      >
+                        View Details
+                      </button>
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
+                        title="Source on GitHub"
+                      >
+                        <ArrowUpRight size={13} />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Section C: Direct Contact Coordinates (No Form) */}
+          <section className="pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80 space-y-4">
+            <div>
+              <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                Contact
+              </h2>
+              <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100 mt-1">
+                Let's connect.
+              </h3>
+              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mt-0.5">
+                Available for full-time engineering roles, backend microservice contracts, and technical architecture consulting.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Mail size={15} className="text-zinc-400" />
+                  <a
+                    href={`mailto:${personalInfo.email}`}
+                    className="text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:underline"
+                  >
+                    {personalInfo.email}
+                  </a>
+                  <button
+                    onClick={handleCopyEmail}
+                    className="p-1 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
+                    title="Copy email address"
+                  >
+                    {copiedEmail ? <Check size={13} className="text-emerald-500" /> : <Copy size={13} />}
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <GithubIcon size={15} className="text-zinc-400" />
+                  <a
+                    href={personalInfo.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors inline-flex items-center gap-1"
+                  >
+                    <span>github.com/{personalInfo.username}</span>
+                    <ArrowUpRight size={12} />
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <a
+                  href="./Kiruthickraj_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900 text-xs font-medium hover:opacity-90 transition-opacity"
+                >
+                  <span>Download Resume</span>
+                  <ArrowUpRight size={12} />
+                </a>
+              </div>
+            </div>
+          </section>
+
         </div>
-      </section>
+      </div>
 
     </div>
   );
