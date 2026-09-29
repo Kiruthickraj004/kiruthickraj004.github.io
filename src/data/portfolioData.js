@@ -15,6 +15,39 @@ export const personalInfo = {
   ]
 };
 
+export const architectureTopology = [
+  {
+    layer: "01",
+    name: "Client & Presentation",
+    role: "Single-Page Applications, reactive state & design systems",
+    skills: ["ReactJS"]
+  },
+  {
+    layer: "02",
+    name: "API Gateway & Microservices",
+    role: "RESTful endpoints, serialization, business logic & token authentication",
+    skills: ["Python", "Django", "Django REST Framework", "PHP", "Laravel"]
+  },
+  {
+    layer: "03",
+    name: "In-Memory Acceleration",
+    role: "Sub-20ms cache-aside layer, distributed rate limiting & session storage",
+    skills: ["Redis"]
+  },
+  {
+    layer: "04",
+    name: "Relational Persistence",
+    role: "ACID transactions, relational schema design, B-tree indexing & migrations",
+    skills: ["PostgreSQL", "MySQL"]
+  },
+  {
+    layer: "05",
+    name: "Infrastructure & Quality",
+    role: "Multi-stage container builds, network orchestration & API contract test suites",
+    skills: ["Docker", "Postman"]
+  }
+];
+
 export const skillsData = [
   {
     id: "python",
