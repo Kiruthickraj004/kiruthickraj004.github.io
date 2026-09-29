@@ -6,20 +6,17 @@ import {
   Copy, 
   Check, 
   FileText, 
-  Server, 
+  Sparkles, 
   Zap, 
-  Database, 
-  Layers, 
-  Terminal,
-  Activity,
-  Cpu
+  CheckCircle2, 
+  BookOpen,
+  Activity
 } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 import GithubIcon from '../components/GithubIcon';
 
 export default function HomePage({ setActivePage }) {
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [activeTier, setActiveTier] = useState(0);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(personalInfo.email);
@@ -27,73 +24,13 @@ export default function HomePage({ setActivePage }) {
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  // The 4 Architectural Tiers for the New Interactive Console
-  const architectureTiers = [
-    {
-      id: "01",
-      name: "Backend Core & APIs",
-      icon: Server,
-      accent: "text-emerald-500",
-      accentBg: "bg-emerald-500/10 border-emerald-500/30",
-      highlight: "High-Throughput Microservices",
-      metric: "RESTful & JWT",
-      technologies: ["Python", "Django", "Django REST Framework", "PHP", "Laravel"],
-      dataFlow: "HTTP Request ➔ JWT Auth Verification ➔ DRF Serializers ➔ Service Layer",
-      summary: "Designing enterprise RESTful APIs, JWT bearer token rotation, custom model serializers, and modular service-repository architectures."
-    },
-    {
-      id: "02",
-      name: "In-Memory Acceleration",
-      icon: Zap,
-      accent: "text-amber-500",
-      accentBg: "bg-amber-500/10 border-amber-500/30",
-      highlight: "Sub-20ms P99 Latency",
-      metric: "< 5ms Cache-Aside",
-      technologies: ["Redis", "In-Memory Caching", "Rate Limiting", "Session Storage"],
-      dataFlow: "Read Request ➔ Redis Cache-Aside Hit (<5ms) ➔ Fast JSON Response",
-      summary: "Implementing key-value cache-aside strategies, distributed API rate limiting, atomic counters, and offloading heavy relational queries."
-    },
-    {
-      id: "03",
-      name: "Relational Persistence",
-      icon: Database,
-      accent: "text-indigo-500",
-      accentBg: "bg-indigo-500/10 border-indigo-500/30",
-      highlight: "ACID Transaction Integrity",
-      metric: "B-Tree Indexes",
-      technologies: ["PostgreSQL", "MySQL", "Schema Migrations", "Query Tuning"],
-      dataFlow: "Transactional Write ➔ Foreign Key Integrity ➔ B-Tree Index ➔ WAL Log",
-      summary: "Architecting normalized relational schemas, foreign key constraints, composite index optimizations, and automated migration lifecycles."
-    },
-    {
-      id: "04",
-      name: "Interface & Containers",
-      icon: Layers,
-      accent: "text-cyan-500",
-      accentBg: "bg-cyan-500/10 border-cyan-500/30",
-      highlight: "Turnkey Multi-Service Delivery",
-      metric: "Docker Multi-Stage",
-      technologies: ["ReactJS", "JavaScript (ES6+)", "Tailwind CSS", "Docker", "Postman"],
-      dataFlow: "SPA Client State ➔ REST Contract ➔ Docker Container ➔ Deployment",
-      summary: "Building responsive single-page client applications backed by multi-stage Docker builds and automated Postman contract test suites."
-    }
-  ];
-
-  const currentTier = architectureTiers[activeTier];
-  const CurrentIcon = currentTier.icon;
-
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-28 pb-20 space-y-14 sm:space-y-16">
       
       {/* ========================================================================= */}
-      {/* 1. NAME WITH SMALL DESCRIPTION (CLEAN, MINIMAL, HONEST)                  */}
+      {/* 1. NAME & SMALL PERSONAL DESCRIPTION (ZERO SKILLS MENTIONED, NO BADGE)    */}
       {/* ========================================================================= */}
       <section className="space-y-5">
-        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-zinc-700/80 text-[11px] font-mono text-zinc-600 dark:text-zinc-300">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse-subtle" />
-          <span>Available for full-time engineering roles</span>
-        </div>
-
         <div className="space-y-1.5">
           <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             {personalInfo.name}
@@ -104,7 +41,7 @@ export default function HomePage({ setActivePage }) {
         </div>
 
         <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-2xl font-normal">
-          I build resilient backend systems, RESTful APIs, and modern reactive web applications. Specialized in <strong className="font-medium text-zinc-900 dark:text-zinc-100">Python (Django/DRF)</strong>, <strong className="font-medium text-zinc-900 dark:text-zinc-100">PHP (Laravel)</strong>, and <strong className="font-medium text-zinc-900 dark:text-zinc-100">ReactJS</strong>, paired with <strong className="font-medium text-zinc-900 dark:text-zinc-100">Redis</strong>, <strong className="font-medium text-zinc-900 dark:text-zinc-100">PostgreSQL</strong>, and <strong className="font-medium text-zinc-900 dark:text-zinc-100">Docker</strong>.
+          I design and engineer resilient web platforms, scalable backend services, and thoughtful digital interfaces. Passionate about system performance, developer ergonomics, and turning complex structural challenges into elegant, reliable software.
         </p>
 
         {/* Minimal Action Anchors */}
@@ -150,115 +87,97 @@ export default function HomePage({ setActivePage }) {
       </section>
 
       {/* ========================================================================= */}
-      {/* 2. NEW IDEA & DESIGN SECTION: THE INTERACTIVE ARCHITECTURE CONSOLE       */}
+      {/* 2. THE "NOW" ENGINEERING DASHBOARD (TOTALLY DIFFERENT NEW SECTION)       */}
       {/* ========================================================================= */}
-      <section className="space-y-4 pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80">
+      <section className="space-y-5 pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80">
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-          <div>
-            <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
-              System Architecture Console
-            </h2>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-0.5">
-              Select a tier to inspect runtime specifications and data flows.
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-subtle" />
+              <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-900 dark:text-zinc-100 font-semibold">
+                The "Now" Dashboard
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+              A real-time snapshot of what I am actively building, exploring, and focusing on.
             </p>
           </div>
           <span className="text-[11px] font-mono text-zinc-400 hidden sm:inline">
-            INTERACTIVE BLUEPRINT
+            UPDATED SEPTEMBER 2026
           </span>
         </div>
 
-        {/* Tactile Tier Selector Pills */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-1.5 rounded-2xl bg-zinc-100/80 dark:bg-zinc-900/60 border border-zinc-200/70 dark:border-zinc-800/70">
-          {architectureTiers.map((tier, idx) => {
-            const TierIcon = tier.icon;
-            const isActive = activeTier === idx;
-            return (
-              <button
-                key={tier.id}
-                onClick={() => setActiveTier(idx)}
-                className={`flex items-center gap-2 p-2.5 rounded-xl text-left transition-all duration-200 ${
-                  isActive
-                    ? 'bg-white dark:bg-zinc-800 shadow-xs border border-zinc-200/80 dark:border-zinc-700/80'
-                    : 'hover:bg-white/50 dark:hover:bg-zinc-800/40 opacity-70 hover:opacity-100'
-                }`}
-              >
-                <span className={`w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-mono font-bold ${
-                  isActive 
-                    ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-100 dark:text-zinc-900' 
-                    : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300'
-                }`}>
-                  {tier.id}
-                </span>
-                <span className="text-xs font-medium text-zinc-800 dark:text-zinc-200 truncate">
-                  {tier.name.split(' ')[0]}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* The Dynamic Architectural Blueprint Card */}
-        <div className="p-6 sm:p-7 rounded-3xl border border-zinc-200/90 dark:border-zinc-800/90 bg-white/80 dark:bg-zinc-900/40 backdrop-blur-md space-y-5 transition-all duration-300 shadow-xs">
+        {/* The 4 "Now" Engineering Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           
-          {/* Header of Active Tier */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 dark:border-zinc-800/70 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100">
-                <CurrentIcon size={20} className={currentTier.accent} />
+          {/* Card 1: Currently Building */}
+          <div className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/30 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors space-y-2.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                <Sparkles size={14} className="text-amber-500" />
+                <span>Currently Building</span>
               </div>
-              <div>
-                <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">
-                  TIER {currentTier.id} SPECIFICATION
-                </div>
-                <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                  {currentTier.name}
-                </h3>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 self-start sm:self-auto">
-              <span className="px-2.5 py-1 rounded-full text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
-                {currentTier.highlight}
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+                IN PROGRESS
               </span>
             </div>
+            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed font-normal">
+              Developing high-throughput distributed microservices, experimenting with event-driven pipelines, and engineering performant single-page web applications.
+            </p>
           </div>
 
-          {/* Core Technologies in this Tier (Names Only) */}
-          <div className="space-y-2">
-            <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">
-              Technologies &amp; Libraries
+          {/* Card 2: Technical Focus */}
+          <div className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/30 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors space-y-2.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                <Zap size={14} className="text-emerald-500" />
+                <span>Technical Focus</span>
+              </div>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+                DEEP DIVE
+              </span>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {currentTier.technologies.map((tech) => (
-                <span
-                  key={tech}
-                  className="px-3 py-1 rounded-lg text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/70 dark:border-zinc-700/60"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
+            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed font-normal">
+              Deep-diving into distributed caching invalidation strategies, database query execution optimization, and sub-20ms P99 latency engineering.
+            </p>
           </div>
 
-          {/* Data Flow Pipeline Box */}
-          <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200/60 dark:border-zinc-800/60 space-y-1.5 font-mono">
-            <div className="text-[10px] uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
-              <Activity size={11} className="text-emerald-500" />
-              <span>DATA FLOW PIPELINE</span>
+          {/* Card 3: Recent Engineering Milestones */}
+          <div className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/30 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors space-y-2.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                <CheckCircle2 size={14} className="text-indigo-500" />
+                <span>Recent Milestones</span>
+              </div>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+                SHIPPED
+              </span>
             </div>
-            <div className="text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed">
-              {currentTier.dataFlow}
-            </div>
+            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed font-normal">
+              Tuned relational schemas and index structures to cut query response times by over 40%, and automated end-to-end containerized contract test suites.
+            </p>
           </div>
 
-          {/* Description */}
-          <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            {currentTier.summary}
-          </p>
+          {/* Card 4: Current Reading & Systems Research */}
+          <div className="p-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/30 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors space-y-2.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                <BookOpen size={14} className="text-cyan-500" />
+                <span>Reading &amp; Research</span>
+              </div>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+                STUDY
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed font-normal">
+              Studying scalable distributed systems architecture, reliable fault-tolerant storage patterns, and modern backend concurrency primitives.
+            </p>
+          </div>
+
         </div>
 
-        {/* Quick Route Cards leading to About, Projects, and Contact */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
+        {/* Quick Portal Navigation to Dedicated Pages */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3">
           <button
             onClick={() => {
               setActivePage('about');
@@ -271,7 +190,7 @@ export default function HomePage({ setActivePage }) {
               <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform text-zinc-400" />
             </div>
             <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-              Background, principles &amp; career timeline.
+              Background, philosophy &amp; skills.
             </p>
           </button>
 
@@ -303,7 +222,7 @@ export default function HomePage({ setActivePage }) {
               <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform text-zinc-400" />
             </div>
             <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-              Direct email &amp; availability coordinates.
+              Direct email &amp; coordinates.
             </p>
           </button>
         </div>
