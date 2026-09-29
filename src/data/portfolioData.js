@@ -3,6 +3,8 @@ export const personalInfo = {
   role: "Full-Stack Developer & API Architect",
   username: "kiruthickraj004",
   email: "kiruthickraj28@gmail.com",
+  phone: "+91-8124509134",
+  linkedin: "https://linkedin.com/in/kiruthickraj004",
   github: "https://github.com/kiruthickraj004",
   location: "India",
   status: "Available for Full-time Roles & High-Impact Projects",
@@ -418,24 +420,34 @@ export const interactiveEndpoints = [
 
 export const experienceTimeline = [
   {
-    period: "2023 - Present",
-    title: "Full-Stack Software Engineer",
-    company: "High-Growth Web Solutions",
-    description: "Architecting backend systems in Django and Laravel, developing dynamic React dashboards, containerizing environments with Docker, and optimizing database queries in PostgreSQL/MySQL.",
-    skills: ["Django", "DRF", "Laravel", "ReactJS", "PostgreSQL", "Docker", "Redis"]
+    period: "Apr 2025 – Jun 2025",
+    title: "Tech Associate Intern",
+    company: "WeGeni - IT Services & Consulting",
+    description: "Engineered modular Laravel REST API services for Young Chanakya (Blogs, Podcasts, Events) and optimized Eloquent ORM queries to reduce endpoint response latency during high-volume retrieval.",
+    bullets: [
+      "Engineered modular Laravel REST API services for Young Chanakya (Blogs, Podcasts, Events), standardizing JSON payloads.",
+      "Optimized Eloquent ORM queries and MySQL schemas to reduce endpoint response latency during high-volume data retrieval."
+    ],
+    skills: ["Laravel", "REST APIs", "MySQL", "Eloquent ORM", "JSON Architecture"]
   },
   {
-    period: "2022 - 2023",
-    title: "Backend & API Developer",
-    company: "Digital Systems Lab",
-    description: "Designed RESTful microservices with Django REST Framework and Postman automated testing collections. Scaled Redis caching layers to reduce database load by 60%.",
-    skills: ["Python", "Django REST Framework", "MySQL", "Redis", "Postman"]
-  },
+    period: "2023 – 2024",
+    title: "Full-Stack Developer Intern",
+    company: "FintechGie - Business + Technology",
+    description: "Developed secure server-side applications in Laravel for Qifi and designed relational MySQL schemas with automated payload validation.",
+    bullets: [
+      "Developed secure server-side applications in Laravel for Qifi, implementing role-based authentication (RBAC) and session security.",
+      "Designed relational MySQL schemas and integrated REST APIs with automated payload validation to safeguard database transactions."
+    ],
+    skills: ["Laravel", "MySQL", "REST APIs", "RBAC Auth", "Payload Validation"]
+  }
+];
+
+export const educationHistory = [
   {
-    period: "2021 - 2022",
-    title: "Web Application Developer",
-    company: "Core Tech Ventures",
-    description: "Built modular web platforms with PHP, Laravel, and MySQL. Implemented responsive interfaces, authentication pipelines, and third-party API integrations.",
-    skills: ["PHP", "Laravel", "MySQL", "JavaScript", "HTML/CSS"]
+    degree: "Bachelor of Technology in Artificial Intelligence and Data Science",
+    institution: "Sri Shanmugha College of Engineering and Technology",
+    period: "2021 – 2025",
+    score: "CGPA 8.4"
   }
 ];

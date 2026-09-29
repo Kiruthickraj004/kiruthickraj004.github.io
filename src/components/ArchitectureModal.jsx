@@ -82,7 +82,7 @@ export default function ArchitectureModal({ project, isOpen, onClose }) {
                   onClick={handleCopyCode}
                   className="flex items-center gap-1 text-xs font-mono text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors"
                 >
-                  {copied ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
+                  {copied ? <Check size={12} className="text-orange-500" /> : <Copy size={12} />}
                   <span>{copied ? 'Copied' : 'Copy'}</span>
                 </button>
               </div>

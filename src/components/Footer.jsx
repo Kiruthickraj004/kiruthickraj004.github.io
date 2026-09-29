@@ -1,6 +1,7 @@
 import React from 'react';
 import { Mail } from 'lucide-react';
 import GithubIcon from './GithubIcon';
+import LinkedinIcon from './LinkedinIcon';
 import { personalInfo } from '../data/portfolioData';
 
 export default function Footer({ setActivePage }) {
@@ -44,6 +45,15 @@ export default function Footer({ setActivePage }) {
         </div>
 
         <div className="flex items-center gap-3">
+          <a
+            href={personalInfo.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors p-1"
+            title="LinkedIn"
+          >
+            <LinkedinIcon size={16} />
+          </a>
           <a
             href={personalInfo.github}
             target="_blank"

@@ -78,3 +78,22 @@
 .animate-scroll-cue {
   animation: scrollIndicator 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
+
+/* Ambient Floating Glow Animations for Hero Section */
+@keyframes floatOrb1 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(35px, -25px) scale(1.08); }
+}
+
+@keyframes floatOrb2 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(-30px, 20px) scale(0.94); }
+}
+
+.animate-orb-1 {
+  animation: floatOrb1 10s ease-in-out infinite;
+}
+
+.animate-orb-2 {
+  animation: floatOrb2 14s ease-in-out infinite;
+}

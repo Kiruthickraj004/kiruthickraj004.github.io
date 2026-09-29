@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Mail, Copy, Check, ArrowUpRight, MapPin, Briefcase, FileText } from 'lucide-react';
+import { Mail, Copy, Check, ArrowUpRight, MapPin, FileText } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 import GithubIcon from '../components/GithubIcon';
+import LinkedinIcon from '../components/LinkedinIcon';
 
 export default function ContactPage() {
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -23,6 +24,13 @@ export default function ContactPage() {
       icon: Mail
     },
     {
+      label: "LinkedIn",
+      value: "linkedin.com/in/kiruthickraj004",
+      href: personalInfo.linkedin,
+      isExternal: true,
+      icon: LinkedinIcon
+    },
+    {
       label: "GitHub",
       value: `github.com/${personalInfo.username}`,
       href: personalInfo.github,
@@ -40,11 +48,6 @@ export default function ContactPage() {
       label: "Location",
       value: personalInfo.location,
       icon: MapPin
-    },
-    {
-      label: "Availability",
-      value: personalInfo.status,
-      icon: Briefcase
     }
   ];
 
@@ -54,13 +57,13 @@ export default function ContactPage() {
       {/* Header */}
       <section className="space-y-3">
         <p className="text-xs font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-          Contact Coordinates
+          Hit Me Up
         </p>
         <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-          Get in touch.
+          Slide into my inbox.
         </h1>
         <p className="text-base text-zinc-600 dark:text-zinc-300 leading-relaxed">
-          I am currently open to full-time engineering roles, backend microservice contracts, and technical consulting.
+          Whether you've got an exciting role, want to build something that hits different, or just want to talk tech — my inbox is always open.
         </p>
       </section>
 
@@ -86,10 +89,10 @@ export default function ContactPage() {
                       href={item.href}
                       target={item.isExternal ? "_blank" : undefined}
                       rel={item.isExternal ? "noopener noreferrer" : undefined}
-                      className="text-sm sm:text-base font-medium text-zinc-900 dark:text-zinc-100 hover:underline inline-flex items-center gap-1 mt-0.5"
+                      className="text-sm sm:text-base font-medium text-zinc-900 dark:text-zinc-100 hover:text-orange-600 dark:hover:text-orange-400 hover:underline inline-flex items-center gap-1 mt-0.5 transition-colors"
                     >
                       <span>{item.value}</span>
-                      {item.isExternal && <ArrowUpRight size={13} className="text-zinc-400" />}
+                      {item.isExternal && <ArrowUpRight size={13} className="text-zinc-400 group-hover:text-orange-500 transition-colors" />}
                     </a>
                   ) : (
                     <div className="text-sm sm:text-base font-medium text-zinc-900 dark:text-zinc-100 mt-0.5">
@@ -102,10 +105,10 @@ export default function ContactPage() {
               {item.isCopy && (
                 <button
                   onClick={item.action}
-                  className="self-start sm:self-center inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-xs font-mono text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+                  className="self-start sm:self-center inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-xs font-mono text-zinc-700 dark:text-zinc-300 hover:border-orange-500/40 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
                   title="Copy email to clipboard"
                 >
-                  {copiedEmail ? <Check size={13} className="text-emerald-500" /> : <Copy size={13} />}
+                  {copiedEmail ? <Check size={13} className="text-orange-500" /> : <Copy size={13} />}
                   <span>{item.actionLabel}</span>
                 </button>
               )}
