@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowDown, ArrowUpRight, ArrowUp, Mail, Copy, Check, Clock, ChevronDown } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, ArrowUp, Mail, Copy, Check, Clock } from 'lucide-react';
 import { personalInfo, projectsData } from '../data/portfolioData';
 import GithubIcon from '../components/GithubIcon';
+import TechArchitectureVisualizer from '../components/TechArchitectureVisualizer';
 
 export default function HomePage({ setActivePage }) {
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [activeStackTab, setActiveStackTab] = useState(0);
   const [localTime, setLocalTime] = useState('');
   const [scrollY, setScrollY] = useState(0);
 
@@ -77,38 +77,6 @@ export default function HomePage({ setActivePage }) {
     }
   ];
 
-  // 4 Architectural pillars representing full-stack engineering
-  const heroTiers = [
-    {
-      id: "01",
-      label: "Backend Services",
-      highlight: "High-Throughput APIs",
-      techSummary: "Python (Django/DRF) & PHP (Laravel)",
-      description: "Architecting modular RESTful microservices, JWT authentication rotation, automated model serializers, and clean service-repository layers."
-    },
-    {
-      id: "02",
-      label: "In-Memory & Caching",
-      highlight: "Sub-20ms P99 Latency",
-      techSummary: "Redis Caching + Rate Limiting",
-      description: "Implementing key-value cache-aside patterns, session offloading, atomic counters, and API rate limiting to protect database workloads."
-    },
-    {
-      id: "03",
-      label: "Relational Persistence",
-      highlight: "ACID Transaction Integrity",
-      techSummary: "PostgreSQL & MySQL Databases",
-      description: "Designing normalized schemas, composite B-Tree indexes, efficient foreign-key relations, and automated migration lifecycles."
-    },
-    {
-      id: "04",
-      label: "Interface & Containers",
-      highlight: "Zero-Downtime Delivery",
-      techSummary: "ReactJS + Docker & Postman",
-      description: "Crafting responsive single-page interfaces backed by multi-stage Docker container builds and automated Postman contract test collections."
-    }
-  ];
-
   // Parallax calculations for the fullscreen hero
   const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
   const progress = Math.min(1, Math.max(0, scrollY / (viewportHeight * 0.75)));
@@ -121,7 +89,7 @@ export default function HomePage({ setActivePage }) {
     <div className="relative w-full">
       
       {/* ========================================================================= */}
-      {/* 1. FULLSCREEN HERO STAGE (100dvh STICKY STARTER OF THE ENTIRE WEBSITE)    */}
+      {/* 1. FULLSCREEN HERO STAGE (100dvh STICKY STARTER - MINIMAL & TECH ANIMATED)*/}
       {/* ========================================================================= */}
       <div className="sticky top-0 h-[100dvh] w-full flex flex-col justify-between overflow-hidden z-10 px-4 sm:px-6 pt-24 pb-6 sm:pb-8 pointer-events-auto">
         <div 
@@ -141,7 +109,7 @@ export default function HomePage({ setActivePage }) {
               </span>
               <span className="text-zinc-400 dark:text-zinc-600">/</span>
               <span className="text-zinc-500 dark:text-zinc-400">
-                FULL-STACK ARCHITECT
+                FULL-STACK DEVELOPER
               </span>
             </div>
 
@@ -155,70 +123,32 @@ export default function HomePage({ setActivePage }) {
             </div>
           </div>
 
-          {/* Centerpiece: Grand Headline & Interactive Architecture Spectrum */}
-          <div className="space-y-5 my-auto py-2">
-            <div className="space-y-2.5">
+          {/* Centerpiece: Minimal Typography + Tech Architecture Visualizer */}
+          <div className="space-y-4 my-auto py-1">
+            <div className="space-y-2">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200/70 dark:border-zinc-700/60 text-[11px] font-mono text-zinc-600 dark:text-zinc-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span>Available for high-impact software engineering roles</span>
+                <span>Available for high-impact software roles</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 leading-[1.12]">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 leading-[1.1]">
                 Engineering resilient backends & modern web systems.
               </h1>
-              <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed font-normal">
-                I architect high-throughput backend services, optimized database engines, and reactive web applications — specialized in <strong className="font-medium text-zinc-900 dark:text-zinc-100">Python (Django/DRF)</strong>, <strong className="font-medium text-zinc-900 dark:text-zinc-100">PHP (Laravel)</strong>, and <strong className="font-medium text-zinc-900 dark:text-zinc-100">ReactJS</strong>, paired with <strong className="font-medium text-zinc-900 dark:text-zinc-100">Redis</strong>, <strong className="font-medium text-zinc-900 dark:text-zinc-100">PostgreSQL</strong>, and <strong className="font-medium text-zinc-900 dark:text-zinc-100">Docker</strong>.
+              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 max-w-xl font-normal leading-relaxed">
+                Full-Stack Developer focused on <strong className="font-medium text-zinc-900 dark:text-zinc-100">Python (Django/DRF)</strong>, <strong className="font-medium text-zinc-900 dark:text-zinc-100">PHP (Laravel)</strong>, and <strong className="font-medium text-zinc-900 dark:text-zinc-100">ReactJS</strong> with <strong className="font-medium text-zinc-900 dark:text-zinc-100">Redis</strong> and <strong className="font-medium text-zinc-900 dark:text-zinc-100">PostgreSQL</strong>.
               </p>
             </div>
 
-            {/* Interactive Architecture Spectrum Box */}
-            <div className="p-4 sm:p-4.5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white/85 dark:bg-zinc-900/60 backdrop-blur-sm space-y-3 shadow-xs">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-100 dark:border-zinc-800/60 pb-2">
-                <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-widest">
-                  System Architecture Spectrum
-                </span>
-                <div className="flex items-center gap-1">
-                  {heroTiers.map((tier, idx) => (
-                    <button
-                      key={tier.id}
-                      onClick={() => setActiveStackTab(idx)}
-                      className={`text-xs px-2.5 py-1 rounded-full transition-all ${
-                        activeStackTab === idx
-                          ? 'bg-zinc-900 text-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 font-medium'
-                          : 'text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'
-                      }`}
-                    >
-                      {tier.id}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                  <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                    {heroTiers[activeStackTab].label}
-                  </h3>
-                  <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400">
-                    {heroTiers[activeStackTab].highlight}
-                  </span>
-                </div>
-                <div className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
-                  {heroTiers[activeStackTab].techSummary}
-                </div>
-                <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed pt-1">
-                  {heroTiers[activeStackTab].description}
-                </p>
-              </div>
-            </div>
+            {/* Platform-Inspired Tech Animation (Architecture Pipeline) */}
+            <TechArchitectureVisualizer />
 
             {/* Quick Action Anchors */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+            <div className="flex flex-wrap items-center gap-3 pt-0.5">
               <button
                 onClick={scrollToContent}
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 text-xs font-medium hover:opacity-90 transition-opacity"
               >
-                <span>Reveal Full Website</span>
+                <span>Explore Work</span>
                 <ArrowDown size={13} />
               </button>
 
