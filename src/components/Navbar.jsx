@@ -1,30 +1,24 @@
 import React, { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { 
-  Terminal, 
   Sun, 
   Moon, 
   Menu, 
   X, 
-  Code2, 
-  Layers, 
-  User, 
-  FolderGit2, 
-  Send,
   FileText
 } from 'lucide-react';
 import GithubIcon from './GithubIcon';
 import { personalInfo } from '../data/portfolioData';
 
-export default function Navbar({ activePage, setActivePage, toggleTerminal, isTerminalOpen }) {
+export default function Navbar({ activePage, setActivePage }) {
   const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'home', label: 'Home', icon: Code2 },
-    { id: 'about', label: 'About', icon: User },
-    { id: 'projects', label: 'Projects', icon: FolderGit2 },
-    { id: 'contact', label: 'Contact', icon: Send }
+    { id: 'home', label: 'Home' },
+    { id: 'about', label: 'About' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'contact', label: 'Contact' }
   ];
 
   const handleNavClick = (pageId) => {
@@ -34,95 +28,64 @@ export default function Navbar({ activePage, setActivePage, toggleTerminal, isTe
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/85 dark:bg-[#070b14]/85 border-b border-slate-200/80 dark:border-slate-800/80 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-40 w-full bg-[#fafafa]/90 dark:bg-[#09090b]/90 backdrop-blur-sm border-b border-zinc-200/80 dark:border-zinc-800/80 transition-colors">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         
-        {/* Brand / Logo */}
+        {/* Brand */}
         <button 
           onClick={() => handleNavClick('home')}
-          className="flex items-center gap-2.5 group text-left focus:outline-none"
+          className="text-left focus:outline-none group flex items-center gap-2"
         >
-          <div className="w-9 h-9 rounded-lg bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/30 dark:border-emerald-500/40 flex items-center justify-center font-mono font-bold text-emerald-600 dark:text-emerald-400 group-hover:scale-105 transition-transform duration-200 shadow-sm">
-            &lt;KR/&gt;
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-slate-900 dark:text-slate-100 tracking-tight font-mono text-sm sm:text-base group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
-                {personalInfo.name}
-              </span>
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="System Online & Available" />
-            </div>
-            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono hidden sm:block">
-              full-stack.engineer
-            </span>
-          </div>
+          <span className="font-semibold text-zinc-900 dark:text-zinc-100 text-base tracking-tight group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
+            {personalInfo.name}
+          </span>
+          <span className="text-zinc-400 dark:text-zinc-600 text-xs font-normal hidden sm:inline">
+            / Full-Stack
+          </span>
         </button>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-1 bg-slate-100/80 dark:bg-slate-900/60 p-1.5 rounded-full border border-slate-200/80 dark:border-slate-800/80">
+        <nav className="hidden md:flex items-center gap-6">
           {navItems.map((item) => {
-            const Icon = item.icon;
             const isActive = activePage === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium rounded-full transition-all duration-200 ${
+                className={`text-sm transition-colors ${
                   isActive
-                    ? 'bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-sm font-semibold'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
+                    ? 'text-zinc-900 dark:text-zinc-100 font-semibold'
+                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 font-normal'
                 }`}
               >
-                <Icon size={14} className={isActive ? 'text-emerald-500' : 'opacity-70'} />
-                <span>{item.label}</span>
+                {item.label}
               </button>
             );
           })}
         </nav>
 
-        {/* Right Side Actions: Terminal Trigger, Theme Toggle, GitHub */}
-        <div className="flex items-center gap-2">
-          {/* Resume Download Link */}
+        {/* Right Side Actions: Resume, Theme Toggle, GitHub */}
+        <div className="flex items-center gap-3">
+          {/* Resume Link */}
           <a
             href="./Kiruthickraj_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-200"
-            title="View & Download Kiruthickraj's Resume"
+            className="hidden sm:inline-flex items-center gap-1.5 text-xs text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors py-1.5 px-2.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            title="View Resume (PDF)"
           >
-            <FileText size={14} className="text-emerald-500" />
+            <FileText size={14} />
             <span>Resume</span>
           </a>
-
-          {/* Terminal CLI Button */}
-          <button
-            onClick={toggleTerminal}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all duration-200 border ${
-              isTerminalOpen
-                ? 'bg-emerald-500 text-white border-emerald-600 shadow-glow-emerald'
-                : 'bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:text-emerald-600 dark:hover:text-emerald-400'
-            }`}
-            title="Open Interactive Developer CLI (Press ~)"
-          >
-            <Terminal size={14} className={isTerminalOpen ? 'animate-pulse' : ''} />
-            <span className="hidden sm:inline">CLI</span>
-            <kbd className="hidden lg:inline text-[10px] px-1 py-0.2 bg-black/10 dark:bg-white/10 rounded">
-              ~
-            </kbd>
-          </button>
 
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-lg text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:text-emerald-500 dark:hover:text-emerald-400 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 focus:outline-none"
+            className="p-1.5 rounded-md text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
             aria-label="Toggle Theme"
-            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
           >
-            {theme === 'dark' ? (
-              <Sun size={17} className="text-amber-400 hover:rotate-90 transition-transform duration-300" />
-            ) : (
-              <Moon size={17} className="text-indigo-600 hover:-rotate-12 transition-transform duration-300" />
-            )}
+            {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
           </button>
 
           {/* GitHub Link */}
@@ -130,59 +93,53 @@ export default function Navbar({ activePage, setActivePage, toggleTerminal, isTe
             href={personalInfo.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-lg text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:text-emerald-500 dark:hover:text-emerald-400 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200"
-            title="View GitHub Profile (kiruthickraj004)"
+            className="p-1.5 rounded-md text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            title="GitHub profile"
           >
             <GithubIcon size={17} />
           </a>
 
-          {/* Mobile Hamburger Menu Button */}
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800"
-            aria-label="Open Navigation Menu"
+            className="md:hidden p-1.5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+            aria-label="Toggle navigation"
           >
-            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
 
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#070b14]/95 backdrop-blur-md px-4 pt-2 pb-4 space-y-1">
+        <div className="md:hidden border-b border-zinc-200 dark:border-zinc-800 bg-[#fafafa] dark:bg-[#09090b] px-4 pt-2 pb-4 space-y-2">
           {navItems.map((item) => {
-            const Icon = item.icon;
             const isActive = activePage === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                className={`w-full text-left py-2 text-sm ${
                   isActive
-                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold'
-                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'text-zinc-900 dark:text-zinc-100 font-semibold'
+                    : 'text-zinc-600 dark:text-zinc-400'
                 }`}
               >
-                <Icon size={16} className={isActive ? 'text-emerald-500' : 'opacity-70'} />
-                <span>{item.label}</span>
+                {item.label}
               </button>
             );
           })}
 
-          {/* Mobile Resume Link */}
-          <a
-            href="./Kiruthickraj_Resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-          >
-            <FileText size={16} className="text-emerald-500" />
-            <span>Download Resume (PDF)</span>
-          </a>
-
-          <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1 font-mono">
-            <span>Theme: {theme.toUpperCase()}</span>
-            <span className="text-emerald-500">API Gateway: 200 OK</span>
+          <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800">
+            <a
+              href="./Kiruthickraj_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 py-2 text-sm text-zinc-600 dark:text-zinc-400"
+            >
+              <FileText size={16} />
+              <span>Download Resume (PDF)</span>
+            </a>
           </div>
         </div>
       )}

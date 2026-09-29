@@ -4,46 +4,29 @@
 
 @layer base {
   :root {
-    --color-bg-base: #f8fafc;
-    --color-text-base: #0f172a;
-    --color-card-base: #ffffff;
-    --color-border-base: #e2e8f0;
+    --color-bg-base: #fafafa;
+    --color-text-base: #18181b;
   }
 
   .dark {
-    --color-bg-base: #070b14;
-    --color-text-base: #f8fafc;
-    --color-card-base: #0f172a;
-    --color-border-base: #1e293b;
+    --color-bg-base: #09090b;
+    --color-text-base: #f4f4f5;
   }
 
   body {
     background-color: var(--color-bg-base);
     color: var(--color-text-base);
     min-height: 100vh;
-    overflow-x: hidden;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Custom Grid Background Pattern */
-.bg-grid-pattern-dark {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-}
-
-.bg-grid-pattern-light {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-}
-
-/* Custom Sleek Scrollbar */
+/* Subtle, clean scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -51,44 +34,11 @@
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #27272a;
   border-radius: 9999px;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #e4e4e7;
   border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Terminal Scanline overlay */
-.scanline-effect {
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.25) 50%
-  ), linear-gradient(
-    90deg,
-    rgba(255, 0, 0, 0.03),
-    rgba(0, 255, 0, 0.01),
-    rgba(0, 0, 255, 0.03)
-  );
-  background-size: 100% 4px, 6px 100%;
-  pointer-events: none;
-}
-
-/* Code badge glowing border */
-.glow-card {
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.glow-card:hover {
-  transform: translateY(-2px);
 }
