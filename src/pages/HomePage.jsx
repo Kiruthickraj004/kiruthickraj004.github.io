@@ -71,16 +71,13 @@ export default function HomePage({ setActivePage }) {
         </div>
       </section>
 
-      {/* Redesigned Skills & Technologies Section */}
-      <section className="space-y-6 pt-4 border-t border-zinc-200/80 dark:border-zinc-800/80">
+      {/* Skills & Technologies Section (Names only) */}
+      <section className="space-y-4 pt-4 border-t border-zinc-200/80 dark:border-zinc-800/80">
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3">
           <div>
             <h2 className="text-xs font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
               Skills & Technologies
             </h2>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
-              Production tools and frameworks across the full stack.
-            </p>
           </div>
 
           {/* Category Filter Pills */}
@@ -101,38 +98,15 @@ export default function HomePage({ setActivePage }) {
           </div>
         </div>
 
-        {/* Clean, Curated Tech Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+        {/* Clean Skills Badges - Names only */}
+        <div className="flex flex-wrap gap-2 pt-1">
           {getFilteredSkills().map((skill) => (
-            <div
+            <span
               key={skill.id}
-              className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/30 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors space-y-2 flex flex-col justify-between"
+              className="px-3.5 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 text-sm font-medium text-zinc-800 dark:text-zinc-200 hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors"
             >
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
-                    {skill.name}
-                  </h3>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400">
-                    {skill.category}
-                  </span>
-                </div>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                  {skill.tagline}
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-1 pt-1 border-t border-zinc-100 dark:border-zinc-800/60">
-                {skill.features.slice(0, 2).map((feat, idx) => (
-                  <span
-                    key={idx}
-                    className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400"
-                  >
-                    · {feat}
-                  </span>
-                ))}
-              </div>
-            </div>
+              {skill.name}
+            </span>
           ))}
         </div>
       </section>
