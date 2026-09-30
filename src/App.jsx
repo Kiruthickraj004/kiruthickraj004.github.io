@@ -97,9 +97,7 @@ function PortfolioApp() {
           )}
         </main>
 
-        <Footer
-          setActivePage={setActivePage}
-        />
+        <Footer />
       </div>
     </div>
   );

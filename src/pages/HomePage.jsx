@@ -144,7 +144,7 @@ export default function HomePage({ setActivePage }) {
           {/* Distinct Engineering Discipline Tag */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-100/60 dark:bg-zinc-900/60 backdrop-blur-sm text-xs font-mono text-zinc-600 dark:text-zinc-400">
             <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
-            <span>Currently Cooking &middot; Systems Architecture &amp; Full-Stack</span>
+            <span>Systems Architecture &amp; Full-Stack</span>
           </div>
 
           {/* Minimalist Bold Typography */}
