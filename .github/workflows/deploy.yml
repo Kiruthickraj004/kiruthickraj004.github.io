@@ -4,6 +4,8 @@ on:
   push:
     branches: ["main", "master"]
   workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
 
 permissions:
   contents: read
@@ -32,6 +34,12 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
+
+      - name: Fetch GitHub profile data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USERNAME: kiruthickraj004
+        run: node scripts/fetch-github-data.js
 
       - name: Build Production Assets
         run: npm run build

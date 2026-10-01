@@ -14,50 +14,6 @@ import {
 import { personalInfo } from '../data/portfolioData';
 import GithubIcon from '../components/GithubIcon';
 
-const activeProject = {
-  name: "mini-uber-eats",
-  tagline: "High-Throughput Order Processing & Delivery Engine",
-  status: "In Active Development",
-  description: "Engineering an asynchronous food delivery backend architecture handling order state machines, driver dispatch logic, and sub-25ms cached menu queries.",
-  techStack: ["Python", "Django REST", "Redis", "Docker", "PostgreSQL"],
-  githubUrl: "https://github.com/Kiruthickraj004/mini-uber-eats"
-};
-
-const initialPinnedRepos = [
-  {
-    name: "mini-uber-eats",
-    description: "High-throughput food ordering & delivery backend with Redis caching and Docker orchestration.",
-    language: "Python",
-    languageColor: "#3b82f6",
-    url: "https://github.com/Kiruthickraj004/mini-uber-eats",
-    stars: 0
-  },
-  {
-    name: "job_management_system",
-    description: "Asynchronous task scheduler & queue execution platform built with Laravel.",
-    language: "PHP / Laravel",
-    languageColor: "#ef4444",
-    url: "https://github.com/Kiruthickraj004/job_management_system",
-    stars: 0
-  },
-  {
-    name: "blogCMS",
-    description: "Modular content management system with authentication, article publishing, and category taxonomy.",
-    language: "PHP",
-    languageColor: "#8b5cf6",
-    url: "https://github.com/Kiruthickraj004/blogCMS",
-    stars: 0
-  },
-  {
-    name: "bulk-price-updater",
-    description: "Automated bulk catalog price manipulation utility with batch database transaction integrity.",
-    language: "PHP",
-    languageColor: "#10b981",
-    url: "https://github.com/Kiruthickraj004/bulk-price-updater",
-    stars: 0
-  }
-];
-
 const defaultContributionStats = {
   total: 138,
   lastYear: 103,
@@ -66,7 +22,8 @@ const defaultContributionStats = {
 
 export default function HomePage({ setActivePage }) {
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [repos, setRepos] = useState(initialPinnedRepos);
+  const [repos, setRepos] = useState([]);
+  const [activeProject, setActiveProject] = useState(null);
   const [contributionStats, setContributionStats] = useState(defaultContributionStats);
 
   const handleCopyEmail = () => {
@@ -102,34 +59,60 @@ export default function HomePage({ setActivePage }) {
         // Silently preserve default authentic contribution stats if offline
       });
 
-    // 2. Fetch pinned repos star counts from GitHub
-    fetch('https://api.github.com/users/Kiruthickraj004/repos?per_page=30')
-      .then((res) => {
-        if (!res.ok) throw new Error('GitHub API error');
-        return res.json();
-      })
-      .then((data) => {
-        if (Array.isArray(data)) {
-          const activeRepos = data.filter((r) => !r.private && !r.archived && !r.disabled);
-          setRepos((prev) =>
-            prev.map((p) => {
-              const match = activeRepos.find(
-                (r) => r.name.toLowerCase() === p.name.toLowerCase()
-              );
-              return match
-                ? {
-                    ...p,
-                    stars: match.stargazers_count,
-                    url: match.html_url
-                  }
-                : p;
-            })
-          );
-        }
-      })
-      .catch(() => {
-        // Silently preserve default curated data if offline or rate-limited
+    const pinnedReposRequest = fetch(`${import.meta.env.BASE_URL}github-data.json`, { cache: 'no-store' })
+      .then((res) => res.ok ? res.json() : null)
+      .catch(() => null);
+    const liveReposRequest = fetch('https://api.github.com/users/kiruthickraj004/repos?sort=pushed&per_page=100')
+      .then((res) => res.ok ? res.json() : null)
+      .catch(() => null);
+
+    Promise.all([pinnedReposRequest, liveReposRequest]).then(([githubData, liveData]) => {
+      const liveRepos = Array.isArray(liveData)
+        ? liveData.filter((repo) => !repo.private && !repo.archived && !repo.disabled)
+        : [];
+      const latestRepo = liveRepos.find((repo) => !repo.fork && repo.pushed_at)
+        || githubData?.recentRepos?.[0];
+
+      if (latestRepo) {
+        const topics = Array.isArray(latestRepo.topics) ? latestRepo.topics : [];
+        const techStack = latestRepo.techStack || [latestRepo.language, ...topics]
+          .filter(Boolean)
+          .filter((tech, index, list) => list.indexOf(tech) === index)
+          .slice(0, 5);
+        setActiveProject({
+          name: latestRepo.name,
+          description: latestRepo.description || 'No description provided for this repository.',
+          techStack,
+          pushedAt: latestRepo.pushed_at || latestRepo.pushedAt,
+          githubUrl: latestRepo.html_url || latestRepo.url
+        });
+      }
+
+      const pinnedRepos = Array.isArray(githubData?.pinnedRepos) ? githubData.pinnedRepos : [];
+      const reposByName = new Map(liveRepos.map((repo) => [repo.name.toLowerCase(), repo]));
+      const mergedPinnedRepos = pinnedRepos.map((pinnedRepo) => {
+        const liveRepo = reposByName.get(pinnedRepo.name.toLowerCase());
+        return liveRepo ? {
+          ...pinnedRepo,
+          description: liveRepo.description || pinnedRepo.description,
+          language: liveRepo.language || pinnedRepo.language,
+          languageColor: liveRepo.languageColor || pinnedRepo.languageColor,
+          url: liveRepo.html_url,
+          stars: liveRepo.stargazers_count
+        } : pinnedRepo;
       });
+
+      setRepos(mergedPinnedRepos.length > 0
+        ? mergedPinnedRepos
+        : liveRepos.slice(0, 4).map((repo) => ({
+            name: repo.name,
+            description: repo.description || 'No description provided for this repository.',
+            language: repo.language || 'Repository',
+            languageColor: '#a1a1aa',
+            url: repo.html_url,
+            stars: repo.stargazers_count
+          })));
+    });
   }, []);
 
   return (
@@ -239,25 +222,27 @@ export default function HomePage({ setActivePage }) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100">
                     <Sparkles size={14} className="text-orange-500" />
-                    <span>Currently Cooking</span>
+                    <span>Latest Repository Activity</span>
                   </div>
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-orange-50 dark:bg-orange-950/40 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-800/50 flex items-center gap-1.5 font-medium">
                     <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
-                    LOCKED IN
+                    LATEST PUSH
                   </span>
                 </div>
 
                 <div>
                   <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                    {activeProject.name}
+                    {activeProject?.name || 'Loading GitHub activity'}
                   </h3>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium mt-0.5">
-                    {activeProject.tagline}
+                    {activeProject?.pushedAt
+                      ? `Last pushed ${new Date(activeProject.pushedAt).toLocaleDateString()}`
+                      : 'Most recently pushed public repository'}
                   </p>
                 </div>
 
                 <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed font-normal">
-                  {activeProject.description}
+                  {activeProject?.description || 'Checking the latest public repository activity.'}
                 </p>
 
                 {/* Tech Stack Pills */}
@@ -266,7 +251,7 @@ export default function HomePage({ setActivePage }) {
                     Tech Stack
                   </span>
                   <div className="flex flex-wrap gap-1.5">
-                    {activeProject.techStack.map((tech) => (
+                    {(activeProject?.techStack || []).map((tech) => (
                       <span
                         key={tech}
                         className="px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-[11px] font-mono font-medium text-zinc-700 dark:text-zinc-300"
@@ -334,7 +319,7 @@ export default function HomePage({ setActivePage }) {
 
               <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800/60">
                 <a
-                  href={activeProject.githubUrl}
+                  href={activeProject?.githubUrl || personalInfo.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-900 dark:text-zinc-100 hover:text-orange-600 dark:hover:text-orange-400 transition-colors group"
