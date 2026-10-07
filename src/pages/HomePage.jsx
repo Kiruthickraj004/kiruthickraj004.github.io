@@ -12,6 +12,12 @@ import {
   Activity 
 } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
+import { 
+  getRepoDescription, 
+  getRepoTechStack, 
+  getRepoPrimaryLanguage, 
+  getLanguageColor 
+} from '../data/repoMetadata';
 import GithubIcon from '../components/GithubIcon';
 
 const defaultContributionStats = {
@@ -20,10 +26,53 @@ const defaultContributionStats = {
   recentLevels: [0, 1, 0, 2, 0, 0, 3, 2, 0, 4, 2, 0, 3, 2, 4, 3]
 };
 
+const initialLatestRepo = {
+  name: "ticketmaster",
+  description: getRepoDescription({ name: "ticketmaster" }),
+  techStack: getRepoTechStack({ name: "ticketmaster" }),
+  pushedAt: "2026-10-05T07:02:06Z",
+  githubUrl: "https://github.com/Kiruthickraj004/ticketmaster"
+};
+
+const initialPinnedRepos = [
+  {
+    name: "ticketmaster",
+    description: getRepoDescription({ name: "ticketmaster" }),
+    language: getRepoPrimaryLanguage({ name: "ticketmaster" }),
+    languageColor: getLanguageColor("Python"),
+    url: "https://github.com/Kiruthickraj004/ticketmaster",
+    stars: 0
+  },
+  {
+    name: "mini-uber-eats",
+    description: getRepoDescription({ name: "mini-uber-eats" }),
+    language: getRepoPrimaryLanguage({ name: "mini-uber-eats" }),
+    languageColor: getLanguageColor("Python"),
+    url: "https://github.com/Kiruthickraj004/mini-uber-eats",
+    stars: 0
+  },
+  {
+    name: "job_management_system",
+    description: getRepoDescription({ name: "job_management_system" }),
+    language: getRepoPrimaryLanguage({ name: "job_management_system" }),
+    languageColor: getLanguageColor("PHP"),
+    url: "https://github.com/Kiruthickraj004/job_management_system",
+    stars: 0
+  },
+  {
+    name: "blogCMS",
+    description: getRepoDescription({ name: "blogCMS" }),
+    language: getRepoPrimaryLanguage({ name: "blogCMS" }),
+    languageColor: getLanguageColor("PHP"),
+    url: "https://github.com/Kiruthickraj004/blogCMS",
+    stars: 0
+  }
+];
+
 export default function HomePage({ setActivePage }) {
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [repos, setRepos] = useState([]);
-  const [activeProject, setActiveProject] = useState(null);
+  const [repos, setRepos] = useState(initialPinnedRepos);
+  const [activeProject, setActiveProject] = useState(initialLatestRepo);
   const [contributionStats, setContributionStats] = useState(defaultContributionStats);
 
   const handleCopyEmail = () => {
@@ -74,15 +123,10 @@ export default function HomePage({ setActivePage }) {
         || githubData?.recentRepos?.[0];
 
       if (latestRepo) {
-        const topics = Array.isArray(latestRepo.topics) ? latestRepo.topics : [];
-        const techStack = latestRepo.techStack || [latestRepo.language, ...topics]
-          .filter(Boolean)
-          .filter((tech, index, list) => list.indexOf(tech) === index)
-          .slice(0, 5);
         setActiveProject({
           name: latestRepo.name,
-          description: latestRepo.description || 'No description provided for this repository.',
-          techStack,
+          description: getRepoDescription(latestRepo),
+          techStack: getRepoTechStack(latestRepo),
           pushedAt: latestRepo.pushed_at || latestRepo.pushedAt,
           githubUrl: latestRepo.html_url || latestRepo.url
         });
@@ -92,26 +136,33 @@ export default function HomePage({ setActivePage }) {
       const reposByName = new Map(liveRepos.map((repo) => [repo.name.toLowerCase(), repo]));
       const mergedPinnedRepos = pinnedRepos.map((pinnedRepo) => {
         const liveRepo = reposByName.get(pinnedRepo.name.toLowerCase());
-        return liveRepo ? {
-          ...pinnedRepo,
-          description: liveRepo.description || pinnedRepo.description,
-          language: liveRepo.language || pinnedRepo.language,
-          languageColor: liveRepo.languageColor || pinnedRepo.languageColor,
-          url: liveRepo.html_url,
-          stars: liveRepo.stargazers_count
-        } : pinnedRepo;
+        const effective = liveRepo || pinnedRepo;
+        const lang = getRepoPrimaryLanguage(effective);
+        return {
+          name: effective.name,
+          description: getRepoDescription(effective),
+          language: lang,
+          languageColor: getLanguageColor(lang),
+          url: effective.html_url || effective.url || `https://github.com/Kiruthickraj004/${effective.name}`,
+          stars: effective.stargazers_count ?? effective.stars ?? 0
+        };
       });
 
-      setRepos(mergedPinnedRepos.length > 0
-        ? mergedPinnedRepos
-        : liveRepos.slice(0, 4).map((repo) => ({
+      if (mergedPinnedRepos.length > 0) {
+        setRepos(mergedPinnedRepos);
+      } else if (liveRepos.length > 0) {
+        setRepos(liveRepos.slice(0, 4).map((repo) => {
+          const lang = getRepoPrimaryLanguage(repo);
+          return {
             name: repo.name,
-            description: repo.description || 'No description provided for this repository.',
-            language: repo.language || 'Repository',
-            languageColor: '#a1a1aa',
+            description: getRepoDescription(repo),
+            language: lang,
+            languageColor: getLanguageColor(lang),
             url: repo.html_url,
-            stars: repo.stargazers_count
-          })));
+            stars: repo.stargazers_count ?? 0
+          };
+        }));
+      }
     });
   }, []);
 

@@ -2,196 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import GithubIcon from '../components/GithubIcon';
 import { personalInfo } from '../data/portfolioData';
-
-// Known repository metadata overrides to ensure high-fidelity descriptions and tech tags
-const repoMetadata = {
-  "mini-uber-eats": {
-    description: "High-throughput food ordering & delivery backend architecture with Redis distributed caching and Docker orchestration.",
-    tech: ["Python", "Django REST Framework", "Redis", "Docker", "PostgreSQL"]
-  },
-  "job_management_system": {
-    description: "Asynchronous task scheduling & queue execution platform for distributed background job processing.",
-    tech: ["PHP", "Laravel", "MySQL", "Redis Queues"]
-  },
-  "django-project": {
-    description: "Modular enterprise RESTful API service built on Django with clean architecture and token authentication.",
-    tech: ["Python", "Django", "Django REST Framework", "SQLite", "PostgreSQL"]
-  },
-  "blogCMS": {
-    description: "Full-featured content management system with article publishing workflows, user authentication, and taxonomy management.",
-    tech: ["PHP", "MySQL", "Blade", "HTML/CSS"]
-  },
-  "laravel-queues-and-jobs": {
-    description: "Asynchronous worker pipeline utilizing Redis queues for high-concurrency background job dispatching.",
-    tech: ["PHP", "Laravel", "Redis", "Queue Workers"]
-  },
-  "clothiq": {
-    description: "Modern e-commerce platform with dynamic catalog filtering, cart state workflows, and relational database schemas.",
-    tech: ["PHP", "Laravel", "MySQL", "JavaScript"]
-  },
-  "Smart-File-Manager": {
-    description: "Cloud storage manager with granular role-based file access control, metadata indexing, and secure uploads.",
-    tech: ["PHP", "Laravel", "Cloud Storage", "MySQL"]
-  },
-  "AI-Content-Assistant-Plugin": {
-    description: "Intelligent content generation assistant integrating LLM APIs, prompt engineering, and automated publishing.",
-    tech: ["PHP", "REST APIs", "LLM Integration", "WordPress"]
-  },
-  "bulk-price-updater": {
-    description: "Automated bulk catalog price manipulation utility with batch database transaction integrity.",
-    tech: ["PHP", "MySQL", "Database Optimization"]
-  },
-  "hireflow": {
-    description: "Recruitment and candidate workflow management system with pipeline tracking and candidate evaluation stages.",
-    tech: ["PHP", "Laravel", "MySQL"]
-  },
-  "laravel-vue": {
-    description: "Decoupled single-page application combining Laravel backend APIs with reactive Vue frontend components.",
-    tech: ["PHP", "Laravel", "Vue.js", "REST APIs"]
-  },
-  "menu-system": {
-    description: "Dynamic nested navigation and catalog taxonomy management engine with tree traversal queries.",
-    tech: ["PHP", "MySQL", "Tree Traversal"]
-  },
-  "headless-cms": {
-    description: "API-first headless content architecture delivering structured JSON payloads to decoupled frontends.",
-    tech: ["PHP", "Laravel", "REST APIs"]
-  },
-  "book-and-author-management": {
-    description: "Relational entity management system with multi-table joins, Eloquent models, and data validation.",
-    tech: ["PHP", "Laravel", "MySQL"]
-  },
-  "wordpress-designs": {
-    description: "Custom responsive web designs and dynamic UI templates for interactive web portals.",
-    tech: ["JavaScript", "PHP", "CSS3", "WordPress"]
-  },
-  "Tenzies-Game": {
-    description: "Interactive reactive dice game built with state management and sound animations.",
-    tech: ["ReactJS", "JavaScript", "CSS3"]
-  },
-  "imdb_score": {
-    description: "Machine learning regression model predicting movie ratings from metadata and historical box-office features.",
-    tech: ["Python", "Jupyter Notebook", "Pandas", "Scikit-Learn"]
-  },
-  "color-swatches": {
-    description: "Interactive product attribute and color swatch selector component for e-commerce interfaces.",
-    tech: ["PHP", "JavaScript", "CSS"]
-  },
-  "size-and-color-availability": {
-    description: "Dynamic inventory matrix checking SKU availability and variant combinations in real time.",
-    tech: ["PHP", "MySQL", "REST APIs"]
-  }
-};
-
-const categories = ["All", "Fullstack", "PHP & Laravel", "Python & Django", "React & Frontend"];
-
-// Match project against category filters
-function projectMatchesCategory(project, category) {
-  if (category === 'All') return true;
-
-  const techLower = (project.tech || []).map((t) => t.toLowerCase());
-  const nameLower = project.name.toLowerCase();
-  const descLower = (project.description || '').toLowerCase();
-
-  if (category === 'Fullstack') {
-    return (
-      techLower.some((t) => t.includes('full-stack') || t.includes('fullstack') || t.includes('full stack')) ||
-      (techLower.some((t) => t.includes('python') || t.includes('django') || t.includes('php') || t.includes('laravel')) &&
-        techLower.some((t) => t.includes('react') || t.includes('vue') || t.includes('docker') || t.includes('blade') || t.includes('javascript') || t.includes('mysql') || t.includes('redis'))) ||
-      ['mini-uber-eats', 'job_management_system', 'clothiq', 'laravel-vue', 'headless-cms', 'hireflow', 'blogCMS', 'Smart-File-Manager'].includes(project.name)
-    );
-  }
-
-  if (category === 'PHP & Laravel') {
-    return (
-      techLower.some((t) => t.includes('php') || t.includes('laravel') || t.includes('blade')) ||
-      nameLower.includes('php') ||
-      nameLower.includes('laravel') ||
-      descLower.includes('php') ||
-      descLower.includes('laravel')
-    );
-  }
-
-  if (category === 'Python & Django') {
-    return (
-      techLower.some((t) => t.includes('python') || t.includes('django')) ||
-      nameLower.includes('python') ||
-      nameLower.includes('django') ||
-      descLower.includes('python') ||
-      descLower.includes('django')
-    );
-  }
-
-  if (category === 'React & Frontend') {
-    return (
-      techLower.some((t) => t.includes('react') || t.includes('frontend') || t.includes('vue') || t.includes('javascript') || t.includes('css')) ||
-      nameLower.includes('react') ||
-      nameLower.includes('game') ||
-      nameLower.includes('designs')
-    );
-  }
-
-  return true;
-}
-
-// Helper to determine tech stack from GitHub repo data
-function extractTechStack(repo) {
-  const meta = repoMetadata[repo.name];
-  if (meta && meta.tech && meta.tech.length > 0) {
-    return meta.tech;
-  }
-
-  const tech = [];
-
-  // Topics if set in GitHub
-  if (Array.isArray(repo.topics) && repo.topics.length > 0) {
-    repo.topics.forEach((t) => {
-      const cap = t.charAt(0).toUpperCase() + t.slice(1);
-      if (!tech.includes(cap)) tech.push(cap);
-    });
-  }
-
-  // Language mapping
-  const lang = repo.language;
-  if (lang) {
-    if (lang === 'Blade') {
-      if (!tech.includes('PHP')) tech.push('PHP');
-      if (!tech.includes('Laravel')) tech.push('Laravel');
-    } else if (lang === 'Jupyter Notebook') {
-      if (!tech.includes('Python')) tech.push('Python');
-      if (!tech.includes('Data Science')) tech.push('Data Science');
-    } else {
-      if (!tech.includes(lang)) tech.push(lang);
-    }
-  }
-
-  // Name heuristics for untagged new repositories
-  const lowerName = repo.name.toLowerCase();
-  if (lowerName.includes('laravel') && !tech.includes('Laravel')) tech.push('Laravel');
-  if (lowerName.includes('django') && !tech.includes('Django')) tech.push('Django');
-  if (lowerName.includes('react') && !tech.includes('ReactJS')) tech.push('ReactJS');
-  if (lowerName.includes('vue') && !tech.includes('Vue.js')) tech.push('Vue.js');
-  if (lowerName.includes('api') && !tech.includes('REST API')) tech.push('REST API');
-  if (lowerName.includes('docker') && !tech.includes('Docker')) tech.push('Docker');
-
-  return tech.length > 0 ? tech : ['Full-Stack'];
-}
-
-// Helper to determine clean description
-function extractDescription(repo) {
-  if (repo.description && repo.description.trim()) {
-    return repo.description.trim();
-  }
-  const meta = repoMetadata[repo.name];
-  if (meta && meta.description) {
-    return meta.description;
-  }
-  const humanized = repo.name.replace(/[-_]/g, ' ');
-  return `Software engineering project and source code implementation for ${humanized}.`;
-}
+import {
+  repoMetadata,
+  categories,
+  getRepoDescription,
+  getRepoTechStack,
+  projectMatchesCategory
+} from '../data/repoMetadata';
 
 // Initial curated fallback list of active public repositories so page loads instantaneously
 const initialProjects = [
+  {
+    name: "ticketmaster",
+    description: repoMetadata["ticketmaster"].description,
+    tech: repoMetadata["ticketmaster"].tech,
+    url: "https://github.com/Kiruthickraj004/ticketmaster"
+  },
+  {
+    name: "kiruthickraj004.github.io",
+    description: repoMetadata["kiruthickraj004.github.io"].description,
+    tech: repoMetadata["kiruthickraj004.github.io"].tech,
+    url: "https://github.com/Kiruthickraj004/kiruthickraj004.github.io"
+  },
   {
     name: "mini-uber-eats",
     description: repoMetadata["mini-uber-eats"].description,
@@ -221,6 +53,18 @@ const initialProjects = [
     description: repoMetadata["laravel-queues-and-jobs"].description,
     tech: repoMetadata["laravel-queues-and-jobs"].tech,
     url: "https://github.com/Kiruthickraj004/laravel-queues-and-jobs"
+  },
+  {
+    name: "clothiq",
+    description: repoMetadata["clothiq"].description,
+    tech: repoMetadata["clothiq"].tech,
+    url: "https://github.com/Kiruthickraj004/clothiq"
+  },
+  {
+    name: "AI-Content-Assistant-Plugin",
+    description: repoMetadata["AI-Content-Assistant-Plugin"].description,
+    tech: repoMetadata["AI-Content-Assistant-Plugin"].tech,
+    url: "https://github.com/Kiruthickraj004/AI-Content-Assistant-Plugin"
   },
   {
     name: "bulk-price-updater",
@@ -263,18 +107,17 @@ export default function ProjectsPage() {
       })
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          // Strictly take only active public repositories (exclude archived, disabled, private, and portfolio repo)
+          // Strictly take only active public repositories (exclude archived, disabled, private)
           const validRepos = data.filter((repo) => 
             !repo.private &&
             !repo.archived &&
-            !repo.disabled &&
-            repo.name !== 'kiruthickraj004.github.io'
+            !repo.disabled
           );
 
           const formatted = validRepos.map((repo) => ({
             name: repo.name,
-            description: extractDescription(repo),
-            tech: extractTechStack(repo),
+            description: getRepoDescription(repo),
+            tech: getRepoTechStack(repo),
             url: repo.html_url
           }));
 
