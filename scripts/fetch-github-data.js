@@ -76,10 +76,15 @@ function formatRepository(repository) {
   };
 }
 
+function isExcludedRepo(repository) {
+  const name = (repository?.name || '').toLowerCase().trim();
+  return name === 'kiruthickraj004.github.io' || name.endsWith('.github.io') || name === 'kiruthickraj004';
+}
+
 const data = {
   fetchedAt: new Date().toISOString(),
-  pinnedRepos: result.data.user.pinnedItems.nodes.map(formatRepository),
-  recentRepos: result.data.user.repositories.nodes.map(formatRepository)
+  pinnedRepos: result.data.user.pinnedItems.nodes.map(formatRepository).filter((repo) => !isExcludedRepo(repo)),
+  recentRepos: result.data.user.repositories.nodes.map(formatRepository).filter((repo) => !isExcludedRepo(repo))
 };
 
 await mkdir('public', { recursive: true });

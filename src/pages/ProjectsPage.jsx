@@ -7,7 +7,8 @@ import {
   categories,
   getRepoDescription,
   getRepoTechStack,
-  projectMatchesCategory
+  projectMatchesCategory,
+  isExcludedRepo
 } from '../data/repoMetadata';
 
 // Initial curated fallback list of active public repositories so page loads instantaneously
@@ -17,12 +18,6 @@ const initialProjects = [
     description: repoMetadata["ticketmaster"].description,
     tech: repoMetadata["ticketmaster"].tech,
     url: "https://github.com/Kiruthickraj004/ticketmaster"
-  },
-  {
-    name: "kiruthickraj004.github.io",
-    description: repoMetadata["kiruthickraj004.github.io"].description,
-    tech: repoMetadata["kiruthickraj004.github.io"].tech,
-    url: "https://github.com/Kiruthickraj004/kiruthickraj004.github.io"
   },
   {
     name: "mini-uber-eats",
@@ -107,11 +102,12 @@ export default function ProjectsPage() {
       })
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          // Strictly take only active public repositories (exclude archived, disabled, private)
+          // Strictly take only active public repositories (exclude archived, disabled, private, and portfolio repo)
           const validRepos = data.filter((repo) => 
             !repo.private &&
             !repo.archived &&
-            !repo.disabled
+            !repo.disabled &&
+            !isExcludedRepo(repo)
           );
 
           const formatted = validRepos.map((repo) => ({

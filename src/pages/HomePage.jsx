@@ -16,7 +16,8 @@ import {
   getRepoDescription, 
   getRepoTechStack, 
   getRepoPrimaryLanguage, 
-  getLanguageColor 
+  getLanguageColor,
+  isExcludedRepo
 } from '../data/repoMetadata';
 import GithubIcon from '../components/GithubIcon';
 
@@ -117,10 +118,13 @@ export default function HomePage({ setActivePage }) {
 
     Promise.all([pinnedReposRequest, liveReposRequest]).then(([githubData, liveData]) => {
       const liveRepos = Array.isArray(liveData)
-        ? liveData.filter((repo) => !repo.private && !repo.archived && !repo.disabled)
+        ? liveData.filter((repo) => !repo.private && !repo.archived && !repo.disabled && !isExcludedRepo(repo))
+        : [];
+      const recentRepos = Array.isArray(githubData?.recentRepos)
+        ? githubData.recentRepos.filter((repo) => !isExcludedRepo(repo))
         : [];
       const latestRepo = liveRepos.find((repo) => !repo.fork && repo.pushed_at)
-        || githubData?.recentRepos?.[0];
+        || recentRepos[0];
 
       if (latestRepo) {
         setActiveProject({
@@ -132,7 +136,8 @@ export default function HomePage({ setActivePage }) {
         });
       }
 
-      const pinnedRepos = Array.isArray(githubData?.pinnedRepos) ? githubData.pinnedRepos : [];
+      const pinnedRepos = (Array.isArray(githubData?.pinnedRepos) ? githubData.pinnedRepos : [])
+        .filter((repo) => !isExcludedRepo(repo));
       const reposByName = new Map(liveRepos.map((repo) => [repo.name.toLowerCase(), repo]));
       const mergedPinnedRepos = pinnedRepos.map((pinnedRepo) => {
         const liveRepo = reposByName.get(pinnedRepo.name.toLowerCase());

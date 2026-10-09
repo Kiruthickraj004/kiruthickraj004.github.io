@@ -7,11 +7,6 @@ export const repoMetadata = {
     tech: ["Python", "Django", "Django REST Framework", "ReactJS", "PostgreSQL", "Tailwind CSS"],
     language: "Python / React"
   },
-  "kiruthickraj004.github.io": {
-    description: "Clean, minimalist developer portfolio and architecture showcase built with React and Tailwind CSS v3, featuring live GitHub telemetry, dual-theme mode, and responsive design.",
-    tech: ["ReactJS", "Tailwind CSS", "JavaScript", "Vite", "GitHub Actions"],
-    language: "ReactJS"
-  },
   "mini-uber-eats": {
     description: "Full-stack food ordering & delivery platform with Django REST Framework, React frontend, Redis caching, and Docker orchestration.",
     tech: ["Python", "Django", "Django REST Framework", "ReactJS", "Redis", "Docker", "PostgreSQL"],
@@ -250,7 +245,6 @@ export function projectMatchesCategory(project, category) {
       nameLower.includes('react') ||
       nameLower.includes('game') ||
       nameLower.includes('designs') ||
-      nameLower.includes('github.io') ||
       project.name === 'ticketmaster' ||
       project.name === 'Tenzies-Game'
     );
@@ -258,3 +252,16 @@ export function projectMatchesCategory(project, category) {
 
   return true;
 }
+
+// Global filter to restrict the portfolio website repository from appearing in public showcase sections
+export function isExcludedRepo(repoOrName) {
+  if (!repoOrName) return false;
+  const name = typeof repoOrName === 'string' ? repoOrName : (repoOrName.name || '');
+  const lower = name.toLowerCase().trim();
+  return (
+    lower === 'kiruthickraj004.github.io' ||
+    lower.endsWith('.github.io') ||
+    lower === 'kiruthickraj004'
+  );
+}
+
