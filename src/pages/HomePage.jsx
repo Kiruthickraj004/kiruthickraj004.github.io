@@ -292,7 +292,7 @@ export default function HomePage({ setActivePage }) {
                   </h3>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium mt-0.5">
                     {activeProject?.pushedAt
-                      ? `Last pushed ${new Date(activeProject.pushedAt).toLocaleDateString()}`
+                      ? `Last pushed ${new Date(activeProject.pushedAt).toLocaleDateString('en-GB')}`
                       : 'Most recently pushed public repository'}
                   </p>
                 </div>
